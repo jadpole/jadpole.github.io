@@ -10,3 +10,6 @@ github_username:  jadpole
 
 # Build settings
 markdown: kramdown
+
+kramdown:
+  input: GFM
