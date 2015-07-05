@@ -9,7 +9,4 @@ url: "http://jadpole.github.io" # the base hostname & protocol for your site
 github_username:  jadpole
 
 # Build settings
-markdown: kramdown
-
-kramdown:
-  input: GFM
+markdown: redcarpet
