@@ -101,7 +101,10 @@ body {
         padding: 1rem;
 
         @include media-query($on-laptop) {
-            & { padding: 1rem 0; }
+            & {
+                padding: 1rem 0;
+                text-align: justify;
+            }
         }
     }
 }
