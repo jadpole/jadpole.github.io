@@ -2,31 +2,32 @@
 # Only the main Sass file needs front matter (the dashes are enough)
 ---
 @charset "utf-8";
+@import 'http://fonts.googleapis.com/css?family=Roboto:400,300,500,400italic';
 
+// Material-design variables
 
+$shadow-1: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+$shadow-2: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
 
-// Our variables
-$base-font-family: Helvetica, Arial, sans-serif;
+$background-color: #f1f1f1;
+$text-color-1: #212121;
+$text-color-2: #727272;
+$text-color-3: #b8b8b8;
+$text-color-4: #dadada;
+
+// Other custom variables
+
 $base-font-size:   16px;
 $small-font-size:  $base-font-size * 0.875;
 $base-line-height: 1.5;
 
-$spacing-unit:     30px;
+$base-font-family: Roboto, Helvetica, Arial, sans-serif;
+$code-font-family: Inconsolata;
 
-$text-color:       #111;
-$background-color: #fdfdfd;
-$brand-color:      #2a7ae2;
-
-$grey-color:       #828282;
-$grey-color-light: lighten($grey-color, 40%);
-$grey-color-dark:  darken($grey-color, 25%);
-
-// Width of the content area
-$content-width:    800px;
-
-$on-palm:          600px;
-$on-laptop:        800px;
-
+$spacing-unit:  30px;
+$on-palm:       600px;
+$on-laptop:     800px;
+$main-width:    800px;
 
 
 // Using media queries with like this:
@@ -37,11 +38,10 @@ $on-laptop:        800px;
 //     }
 // }
 @mixin media-query($device) {
-    @media screen and (max-width: $device) {
+    @media screen and (min-width: $device) {
         @content;
     }
 }
-
 
 
 // Import partials from `sass_dir` (defaults to `_sass`)

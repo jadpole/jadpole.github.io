@@ -1,106 +1,126 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+#site-header, #site-footer, #main {
+    .wrapper {
+        max-width: $main-width;
+        margin: auto;
+        padding: 0 1rem;
+        
+        @include media-query($on-laptop) {
+            & { padding: 0; }
+        }
+    }
+}
+
+
 /**
- * Site header
+ * Header
  */
-.site-header {
-    border-top: 5px solid $grey-color-dark;
-    border-bottom: 1px solid $grey-color-light;
-    min-height: 56px;
 
-    // Positioning context for the mobile navigation icon
-    position: relative;
+#site-header {
+    height: 56px;
+    line-height: 56px;
+    background: #FFC107;
+    box-shadow: $shadow-1;
 }
 
-.site-title {
-    font-size: 26px;
-    line-height: 56px;
+#site-title {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 500;
     letter-spacing: -1px;
-    margin-bottom: 0;
-    float: left;
-
-    &,
-    &:visited {
-        color: $grey-color-dark;
-    }
+    color: #fff;
+    text-shadow: 0.05rem 0.05rem 0.2rem rgba(0, 0, 0, 0.6);
 }
 
-.site-nav {
+#site-nav {
     float: right;
-    line-height: 56px;
-
-    .menu-icon {
-        display: none;
-    }
-
-    .page-link {
-        color: $text-color;
-        line-height: $base-line-height;
-
-        // Gaps between nav items, but not on the first one
+    
+    a {
+        font-size: 18px;
+        color: $text-color-1;
+        
+        &:hover {
+            color: lighten($text-color-1, 15%);
+            text-decoration: underline;
+        }
+        
         &:not(:first-child) {
             margin-left: 20px;
         }
     }
+}
 
-    @include media-query($on-palm) {
-        position: absolute;
-        top: 9px;
-        right: 30px;
-        background-color: $background-color;
-        border: 1px solid $grey-color-light;
-        border-radius: 5px;
-        text-align: right;
 
-        .menu-icon {
-            display: block;
-            float: right;
-            width: 36px;
-            height: 26px;
-            line-height: 0;
-            padding-top: 10px;
-            text-align: center;
+/**
+ * Footer
+ */
 
-            > svg {
-                width: 18px;
-                height: 15px;
+#site-footer {
+    padding: ($spacing-unit / 2) 0;
+    border-top: 1px dashed $text-color-4;
+    background: #FFF59D;
+    box-shadow: $shadow-1;
+}
 
-                path {
-                    fill: $grey-color-dark;
-                }
-            }
-        }
+#site-footer .wrapper {
+    .site-title {
+        font-size: 1.2rem;
+    }
+    
+    ul {
+        list-style-type: none;
+        margin-left: 0;
+    }
+}
 
-        .trigger {
-            clear: both;
-            display: none;
-        }
+@include media-query($on-laptop) {
+    #site-footer .wrapper {
+        display: flex;
+        flex-flow: row nowrap;
+    }
 
-        &:hover .trigger {
-            display: block;
-            padding-bottom: 5px;
-        }
+    #site-info { flex: 2; }
+    #social-medias { flex: 1; }
+    #site-description { flex: 3; }
+}
 
-        .page-link {
-            display: block;
-            padding: 5px 10px;
+
+/**
+ * Main
+ */
+
+#main {
+    flex: 1;
+    
+    .wrapper {
+        padding: 1rem;
+
+        @include media-query($on-laptop) {
+            & { padding: 1rem 0; }
         }
     }
 }
 
+.post-list {
+    margin-left: 0;
+    list-style: none;
 
-
-/**
- * Site footer
- */
-.site-footer {
-    border-top: 1px solid $grey-color-light;
-    padding: $spacing-unit 0;
+    > li {
+        margin-bottom: $spacing-unit;
+    }
 }
 
-.footer-heading {
-    font-size: 18px;
-    margin-bottom: $spacing-unit / 2;
+.post-meta {
+    font-size: $small-font-size;
+    color: $text-color-2;
 }
 
+/*
 .contact-list,
 .social-media-list {
     list-style: none;
@@ -160,7 +180,6 @@
 
 /**
  * Page content
- */
 .page-content {
     padding: $spacing-unit 0;
 }
@@ -169,19 +188,7 @@
     font-size: 20px;
 }
 
-.post-list {
-    margin-left: 0;
-    list-style: none;
 
-    > li {
-        margin-bottom: $spacing-unit;
-    }
-}
-
-.post-meta {
-    font-size: $small-font-size;
-    color: $grey-color;
-}
 
 .post-link {
     display: block;
@@ -192,7 +199,6 @@
 
 /**
  * Posts
- */
 .post-header {
     margin-bottom: $spacing-unit;
 }
@@ -234,3 +240,4 @@
         }
     }
 }
+*/
