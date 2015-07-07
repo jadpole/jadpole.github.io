@@ -6,10 +6,10 @@
     @extend %vertical-rhythm;
     
     .c,   // Comment,
-    .cm   // Comment.Multiline
-    .c1   // Comment.Single
+    .cm,  // Comment.Multiline
+    .c1,  // Comment.Single
     {
-        color: #998;
+        color: #499D57;
         font-style: italic;
     }
     
@@ -34,7 +34,9 @@
         color: #f00;
     }
     
-    .err   { color: #a61717; background-color: #e3d2d2 } // Error
+    /** TODO Change back to normal once the Rust syntax highlighter is updated */
+    .err   { color: #a61717; /*background-color: #e3d2d2*/ } // Error
+    
     .cs    { color: #999; font-weight: bold; font-style: italic } // Comment.Special
     .gd    { color: #000; background-color: #fdd } // Generic.Deleted
     .gd .x { color: #000; background-color: #faa } // Generic.Deleted.Specific
