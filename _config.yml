@@ -11,4 +11,4 @@ github_username:  jadpole
 # Build settings
 markdown: redcarpet
 
-permalink: "/:year/:y_day/:title.html"
+permalink: "/:year/:y_day/:title"
