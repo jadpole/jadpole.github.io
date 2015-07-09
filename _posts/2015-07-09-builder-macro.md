@@ -49,7 +49,7 @@ chaining. For example, the Orc would be constructed as such:
 let my_orc = OrcBuilder::new()
     .name("Greuh")
     .position((100, 200))
-    .weapon(Axe::new())
+    .weapon(Box::new(Axe::new()))
     .build().unwrap();
 ```
 
@@ -70,7 +70,7 @@ team will add more types and more properties, the code for the builders will
 continue to grow until it becomes a bigger problem than having a constructor
 with twenty arguments.
 
-In fact, most of the methods are just about setting arguments:
+In fact, most of the methods are just about setting attributes:
 
 ```rust
 fn health(self, value: i32) -> Self {
@@ -88,8 +88,8 @@ inside the data structure.
 
 Then, you remember reading about this feature in Rust called _macros_. If you
 recall correctly, they allow to programmatically generate Rust code at
-compile-time. Then, you feel like you should be able to do most of your work
-using only two macros.
+compile-time. After a bit of research, you feel like you should be able to do
+most of your work using only two macros.
 
 The first would allow you to just _stuff the arguments_ inside the destination
 structure. It would generate both the builder and the destination structures.
@@ -153,10 +153,10 @@ Let's write each one!
 The way our simplified Orc is built is straightforward: you put the arguments
 inside the structure. In practice, you would probably add a _target_ reference
 and a maximum health... but for the sake of demonstration you keep the struct
-small. And, unless the generated Orc is a special one, e.g. a Level 11 boss
+small. And, unless the generated Orc is a special one, e.g. a level 11 boss
 with a terrifying name, we would expect that it spawns with 100% of its health,
 at level 1 and with no experience. Heck! We can even call it _Orc_ and give it
-either a bow or an Axe depending on its class.
+either a bow or an axe depending on its class.
 
 So, the Orc structure is declared as such:
 
@@ -304,8 +304,8 @@ every hour, which depends on the level you provided. Still, you generally
 create farms at the demand of the player; in which case, they are level 1 and
 have full health.
 
-What you do then, is generate the value randomly if it has not been set, which
-you would do, for example, if you loaded the farm's data from a save file.
+What you do then, is generate the value randomly if it has not been set. You
+_would_ set it, for example, if you loaded the farm's data from a save file.
 
 So, you wish to write something of the sort:
 
@@ -351,7 +351,7 @@ skinny_builder!(UserBuilder => User,
 ```
 
 There you have it! You can now allow the player to spawn a brand new farm on
-the map by writing something like:
+the map by writing something like this:
 
 ```rust
 FarmBuilder::new()
@@ -361,7 +361,7 @@ FarmBuilder::new()
 
 It's probably going to be more complicated in production code, and we loose the
 whole garantee that _all the arguments are provided to the constructor_ at
-compile-time, but until we have named arguments in Rust it does its job pretty
+compile-time, but until we have named arguments in Rust it does, its job pretty
 well.
 
 
@@ -374,7 +374,7 @@ than it would have taken otherwise, thanks to macro the magnificient. I hope
 that it got you as excited about Rust as I am myself, because this language is
 incredible.
 
-If you haven't checked it out already, I've been writing a [tutorial](#)
+If you haven't checked it out already, I've been writing a [tutorial](/2015/185/arcaders-1-0/)
 about how the different features of Rust fit together. To do so, we're creating
 a game. And we're using macros, pattern matching, trait objects, and all kinds
 of rusty goodies to do it. I've still got some caveats to fix and a lot of
