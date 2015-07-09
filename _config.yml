@@ -8,6 +8,9 @@ url: "http://jadpole.github.io" # the base hostname & protocol for your site
 # witter_username: jekyllrb
 github_username:  jadpole
 
+gems:
+  - jekyll-redirect-from
+
 # Build settings
 markdown: redcarpet
 
