@@ -1,7 +1,6 @@
 ---
 layout: post
 title:  "A Rust macro for the builder pattern"
-date:   2015-07-09 11:30:00
 categories: rust
 ---
 
@@ -374,7 +373,7 @@ than it would have taken otherwise, thanks to macro the magnificient. I hope
 that it got you as excited about Rust as I am myself, because this language is
 incredible.
 
-If you haven't checked it out already, I've been writing a [tutorial](/2015/185/arcaders-1-0/)
+If you haven't checked it out already, I've been writing a [tutorial](/arcaders/arcaders-1-0/)
 about how the different features of Rust fit together. To do so, we're creating
 a game. And we're using macros, pattern matching, trait objects, and all kinds
 of rusty goodies to do it. I've still got some caveats to fix and a lot of
