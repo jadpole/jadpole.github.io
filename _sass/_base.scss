@@ -40,8 +40,10 @@ ul, ol, dl, figure,
  * Images
  */
 img {
+    display: block;
     max-width: 100%;
-    vertical-align: middle;
+    margin: $spacing-unit / 2 auto;
+    box-shadow: $shadow-1;
 }
 
 a {
