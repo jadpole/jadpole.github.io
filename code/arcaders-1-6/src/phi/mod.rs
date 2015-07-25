@@ -23,12 +23,14 @@ struct_events! {
 
 /// Bundles the Phi abstractions in a single structure which
 /// can be passed easily between functions.
-pub struct Phi<'p, 'r> {
-    pub events: Events<'p>,
-    pub renderer: Renderer<'r>,
+///
+/// Neither of the attributes should outlive the SDL context.
+pub struct Phi<'a> {
+    pub events: Events<'a>,
+    pub renderer: Renderer<'a>,
 }
 
-impl<'p, 'r> Phi<'p, 'r> {
+impl<'a> Phi<'a> {
     pub fn output_size(&self) -> (u32, u32) {
         self.renderer.get_output_size().unwrap()
     }
