@@ -1,7 +1,7 @@
 use ::sdl2::render::Renderer;
 use ::sdl2::timer;
 
-mod data;
+pub mod data;
 
 #[macro_use]
 mod events;
