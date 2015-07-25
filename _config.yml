@@ -14,4 +14,7 @@ gems:
 # Build settings
 markdown: redcarpet
 
+redcarpet:
+  extensions: [ "tables" ]
+
 permalink: "/:categories/:title"
