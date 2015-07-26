@@ -3,6 +3,7 @@ use ::sdl2::timer;
 
 pub mod data;
 
+
 #[macro_use]
 mod events;
 
@@ -157,9 +158,7 @@ where F: Fn(&mut Phi) -> Box<View> {
             },
             ViewAction::ChangeView(new_view) => {
                 current_view.pause(&mut context);
-                println!("BEFORE");
                 current_view = new_view;
-                println!("AFTER");
                 current_view.resume(&mut context);
             }
         }
