@@ -85,7 +85,7 @@ _outside world_ &mdash;, will always have the desired size. With the `new_map`
 method at hand, we could define \\(\mathbf I\_3\\) as:
 
 ```rust
-let i3 = Matrix::<N3, N3>::new_map(|i, j| (i == j) as isize as f64);
+let i3 = Matrix::<N3, N3>::new_map(|i, j| if i == j { 1.0 } else { 0.0 });
 ```
 
 Even better, let's define it through a new associated function to `Matrix`.
@@ -93,7 +93,7 @@ Even better, let's define it through a new associated function to `Matrix`.
 ```rust
 impl<M: Num> Matrix<M, M> {
     pub fn identity() -> Matrix<M, M> {
-        Matrix::new_map(|i, j| (i == j) as isize as f64)
+        Matrix::new_map(|i, j| if i == j { 1.0 } else { 0.0 })
     }
 }
 
@@ -135,6 +135,24 @@ let i3 = Matrix::<N3,N2>::identity();
 // <anon>:73     let i3 = Matrix::<N3,N2>::identity();
                        ^~~~~~~~~~~~~~~~~~~~~~~~~
 ```
+
+Can we do better? Sure! Using Rust nightly:
+
+```rust
+#![allow(dead_code)]
+#![feature(zero_one)]
+use ::std::num::{One, Zero};
+
+impl<M: Num> Matrix<M, M> {
+    pub fn identity() -> Matrix<M, M> {
+        Matrix::new_map(|i, j| if i == j { One::one() } else { Zero::zero() })
+    }
+}
+```
+
+This way, if we were to change the type of the scalars &mdash; switching to
+complex numbers, for example &mdash; this function will still work like a charm.
+In fact, it would work with any type implementing `PartialEq`, `One` and `Zero`.
 
 As a side note, we can also use `new_map` to, quite elegantly, define matrix
 transpose:
