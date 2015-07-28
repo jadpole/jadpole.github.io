@@ -4,10 +4,9 @@ title:  "Type-checked matrix operations in Rust"
 categories: arcaders
 ---
 
-I recently started playing with `PhantomData`, and my first _project_ using it
-was to try to implement type-checked matrix multiplication. It turns out that,
-not only does it work like a charm, the implementation is surprisingly
-self-evident.
+I recently started playing with Rust's `PhantomData`, and decided to implement
+type-checked matrix operations. It turns out that, not only does it work like a
+charm, the implementation is also surprisingly self-evident.
 
 So, let's see how this works!
 
@@ -15,8 +14,8 @@ So, let's see how this works!
 ## Integer generics
 
 The first problem that I encountered was Rust's lack of support for value
-parameters, one we can easily simulate them using traits, macros, and associated
-functions:
+parameters; Although this is a hack, we can easily simulate them using traits,
+macros, and associated functions:
 
 ```rust
 use ::std::marker::PhantomData;
@@ -48,15 +47,15 @@ nums1 {
 }
 ```
 
-As we will see soon enough that, once the Rust compiler learns about value
-parameters, everything will be _much_ better. For the moment, however, it will
-do the job.
+As we will see soon enough, once the Rust compiler understands value parameters,
+everything will be _much_ better. For the moment, however, it will do the job.
 
 
 ## Type-checked matrix dimensions
 
 Now that this is out of the way, we can actually create the `Matrix` type. For
-now, I chose to keep it simple by defining it over the real field (`f64`) only:
+the sake of this demo, I chose to keep it simple by defining it over the real
+field (`f64`) only:
 
 ```rust
 #[derive(Copy, PartialEq)]
@@ -81,9 +80,9 @@ impl<M: Num, N: Num> Matrix<M, N> {
 ```
 
 Notice the calls to `Num::val()` in the construction of the matrix instance.
-This way, we ensure that the entries &mdash; if inaccessible from the _outside
-world_ &mdash;, will always have the desired size. With the `new_map` method at
-hand, we could define I3 as:
+Through them, we ensure that the entries &mdash; if inaccessible from the
+_outside world_ &mdash;, will always have the desired size. With the `new_map`
+method at hand, we could define \\(\mathb I\_3\\) as:
 
 ```rust
 let i3 = Matrix::<N3, N3>::new_map(|i, j| (i == j) as isize as f64);
@@ -106,9 +105,11 @@ always have an equal number of rows an columns. In fact, because of this, Rust
 can figure what the second type should be by itself:
 
 ```rust
+// Only specify the first (or second) size type...
+
 let i3 = Matrix::<N3,_>::identity();
 
-// Or, relying on type inference:
+// ... or, rely fully on type inference:
 //
 // (__*__)(N3*N2)  is how type inference starts
 // (__*N3)(N3*N2)  from the definition of matrix multiplication
@@ -124,8 +125,8 @@ assert!(m == m2);  // true => the test passes
 ```
 
 If we were to get distracted and ask Rust for a rectangular identity matrix,
-either through explicit typing or during a type-infered computation, it would
-_reject_ our code:
+either through explicit typing or during a type-infered computation, then it
+would _reject_ our code:
 
 ```rust
 let i3 = Matrix::<N3,N2>::identity();
@@ -147,14 +148,13 @@ impl<M: Num, N: Num> Matrix<M, N> {
 ```
 
 You got to admit that it's quite close to the mathematical notation:
-\\({\mathbf M}\_{ij} = {\mathbf M}^T\_{ji}\\).
+\\({\mathbf M}^T\_{ij} = {\mathbf M}\_{ji}\\).
 
 
 
 ## Matrix multiplication
 
-Let us first define matrix multiplication by a scalar. `Matrix::new_map` will
-show its versatility:
+Let us first define matrix multiplication by a scalar:
 
 $$\alpha({\mathbf m}\_{ij}) = (\alpha\ {\mathbf m}\_{ij})$$
 
@@ -177,7 +177,8 @@ impl<M: Num, N: Num> Mul<Matrix<M, N>> for f64 {
 ```
 
 Next, we shall define multiplication between matrices. Remember that, when using
-the usual rule, an M*N matrix applied on an N*L matrix produce an M*L matrix:
+the usual rule, an \\(M \times N\\) matrix applied on an \\(N \times L\\) matrix
+produce an \\(M \times L\\) matrix:
 
 ```rust
 impl<M: Num, N: Num, L: Num> Mul<Matrix<N, L>> for Matrix<M, N> {
@@ -189,7 +190,7 @@ impl<M: Num, N: Num, L: Num> Mul<Matrix<N, L>> for Matrix<M, N> {
 ```
 
 Here, I kept the type of `self` in order to clearly illustrate the role of the
-matrix size in the operation. By relying once again on the `new_map` function,
+matrix's size in the operation. By relying once again on the `new_map` function,
 we get the following definition for matrix multiplication:
 
 ```rust
@@ -203,7 +204,10 @@ impl<M: Num, N: Num, L: Num> Mul<Matrix<N, L>> for Matrix<M, N> {
 }
 ```
 
-Moreover, once `Iterator::sum` stabilizes, we will be able to write:
+Moreover, once `Iterator::sum` stabilizes, we will be able to something _much_
+closer to the mathematical definition:
+
+$$(\mathbf{AB})\_{ij} = \sum\_{k=1}\^m A\_{ik}B\_{kj}$$
 
 ```rust
 impl<M: Num, N: Num, L: Num> Mul<Matrix<N, L>> for Matrix<M, N> {
@@ -252,8 +256,6 @@ type Ket<N> = Matrix<N, N1>;
 type Bra<N> = Matrix<N1, N>;
 ```
 
-I will keep this notation for the rest of this article, because _reasons_.
-
 We can now implement vector-specific methods:
 
 ```rust
@@ -271,9 +273,9 @@ impl<N: Num> Bra<N> {
 ```
 
 Whatever method we implement for `Ket<N>` will be available for `Matrix<N, N1>`.
-However, it's more readable this way, and the intent is obvious. Notice how,
-here too, we would benefit from value parameters by returning an array of the
-good length instead of a vector.
+However, it's more readable this way, and the intent is obvious. Notice how
+these methods, too, would benefit from value parameters by returning an array of
+the good length instead of a vector.
 
 
 ## Conclusion
