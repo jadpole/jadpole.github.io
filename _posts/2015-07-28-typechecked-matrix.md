@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Type-checked matrix multiplication in Rust"
+title:  "Type-checked matrix operations in Rust"
 categories: arcaders
 ---
 
