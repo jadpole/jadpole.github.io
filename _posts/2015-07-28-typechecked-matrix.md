@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Type-checked matrix operations in Rust"
-categories: arcaders
+categories: rust
 ---
 
 I recently started playing with Rust's `PhantomData`, and decided to implement
