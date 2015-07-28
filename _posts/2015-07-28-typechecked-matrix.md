@@ -139,6 +139,8 @@ let i3 = Matrix::<N3,N2>::identity();
 Can we do better? Sure! Using Rust nightly:
 
 ```rust
+// By Nihy
+
 #![allow(dead_code)]
 #![feature(zero_one)]
 use ::std::num::{One, Zero};
