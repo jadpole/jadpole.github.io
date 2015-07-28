@@ -82,7 +82,7 @@ impl<M: Num, N: Num> Matrix<M, N> {
 Notice the calls to `Num::val()` in the construction of the matrix instance.
 Through them, we ensure that the entries &mdash; if inaccessible from the
 _outside world_ &mdash;, will always have the desired size. With the `new_map`
-method at hand, we could define \\(\mathb I\_3\\) as:
+method at hand, we could define \\(\mathbf I\_3\\) as:
 
 ```rust
 let i3 = Matrix::<N3, N3>::new_map(|i, j| (i == j) as isize as f64);
@@ -207,7 +207,7 @@ impl<M: Num, N: Num, L: Num> Mul<Matrix<N, L>> for Matrix<M, N> {
 Moreover, once `Iterator::sum` stabilizes, we will be able to something _much_
 closer to the mathematical definition:
 
-$$(\mathbf{AB})\_{ij} = \sum\_{k=1}\^m A\_{ik}B\_{kj}$$
+$$(\mathbf{AB})\_{ij} = \sum\_{k=1}\^n A\_{ik}B\_{kj}$$
 
 ```rust
 impl<M: Num, N: Num, L: Num> Mul<Matrix<N, L>> for Matrix<M, N> {
