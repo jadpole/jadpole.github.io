@@ -4,6 +4,8 @@ title:  "Type-checked matrix operations in Rust"
 categories: rust
 ---
 
+<!-- Sandbox: http://is.gd/NInGUx -->
+
 I recently started playing with Rust's `PhantomData`, and decided to implement
 type-checked matrix operations. It turns out that, not only does it work like a
 charm, the implementation is also surprisingly self-evident.
