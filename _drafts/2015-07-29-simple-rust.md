@@ -20,11 +20,42 @@ And I thought that I would tackle that last part right now.
 
 ## Type hierarchy, Venn-style
 
-My first insight was that Rust's type-system is based around only two objects:
-traits and types, the latter of which is composed of named records (`struct`)
-and discriminated unions (`enum`).
+The most flagrant example of Rust's minimalism is perhaps its type-system. It
+traded classical OOP for a more _functional_ approach based solely around the
+concept of traits. It is through traits that one defines the interface of his
+data structures, overloads operators, marks concurrent types, and handles
+dynamic dispatch. This allows Rust to throws away many complicated concepts such
+as __TODO__ and inheritance, replacing the latter by _composition_.
 
-<!-- It also doesn't _really_ have methods, but I'll come back to this later. -->
+With most of OOP's complexity out of the way, Rust compensates by providing
+expressive constructs, such as conditional implementation
+
+You can even declare dependencies between traits, for example by requiring from
+values evolving according to an AI to be
+
+Because Rust bet on a single, unifying concept, it can propose
+
+Yet, it compensates this simplicity in design by proposing expressive constructs
+such as
+
+Part of Rust's simplicity comes from the fact that its type-system only provides
+two ways to organize values: _types_, which specify the manipulated data, and
+_traits_, which abstractly describe properties of the values without concerning
+themselves with the underlying data. While types are independent objects,
+
+You (hopefully) already know what type and traits are.
+
+These two constructs can be combined through the principle of _composition over
+inheritance_, which states that types should be distinct entities that do not
+depend on one-another. One would then express
+ common processes and properties of
+the underlying data by implementing traits. Unlike types, traits can be combined
+in many ways
+
+require for on one-another. For example, one could require of every NPC that it
+implements `Entity`.
+
+
 
 Then, one could consider traits and types as being sets of possible values. Let
 us first consider how __traits__ behave in this representation:
@@ -37,9 +68,9 @@ _really_ mean is that said type exists in the intersection between both traits.
 In other words, `T: A + B` _really_ means \\(T \subset A \cap B\\).
 
 What about traits that depend on other traits? Same thing! `C: A + B` _really_
-means that every type implementing \\(C\\) must also live within the
-intersection \\(A \cap B\\), i.e. \\(C \subset A \cap B\\). The two statements
-are equivalent. Graphically, it is expressed by \\(C\\) being _contained_ in the
+means that every type implementing \\(C\\) must live within the intersection
+\\(A \cap B\\); that is, \\(C \subset A \cap B\\). The two statements are
+equivalent. Graphically, it is expressed by \\(C\\) being _contained_ in the
 intersection:
 
 ![Trait dependency using Venn diagram](/images/talk-1-2.png)
@@ -50,24 +81,25 @@ sign means _intersection of_.
 According to this model, if I declare \\(T \subset C\\), it is implied that
 \\(T \subset A \cap B\\). Therefore, the compiler should force us to implement
 `A` and `B`, which is exactly what it does. Whether you view trait dependencies
-as forming a tree or a Venn diagram, the result is the same!
+as forming a tree or a Venn diagram, the result is the same.
 
-Now, let's see where __types__ fit into all of this.
-
-You could say that types represent the smallest possible subset allowed by the
-language. That is, a type can contain _elements_, but it cannot contain other
-traits or tangible types.
+The approach using sets, however, is _much_ simpler to think about and it is
+possible because of the way __types__ work. Rust's adoption of the principle of
+_composition over inheritance_ means that types are pretty much independent. As
+such, you could say that they represent the smallest possible subset allowed by
+the language; a type can contain _elements_, but it cannot contain other traits
+or tangible types.
 
 ![Types represented by distinct subsets](/images/talk-1-3.png)
 
 You should note the "tangible": this is because generic variants are different
 types in this mental framework, like they are in compiled code. That way, they
-can be in different trait subsets, through conditional `impl`. This also means
+can be in different trait subsets through conditional `impl`. This also means
 that, when expecting a `Vec<i32>`, you cannot receive a `Vec<String>`: the two
 sets are necessarily disjoint.
 
 We also consider that whatever methods are associated to a specific type make up
-their own _abstract_ trait associated with the type. For example (where `MyType`
+their own _implicit_ trait associated with the type. For example (where `MyType`
 does not implement `Hash`):
 
 ![Option defaults + Hash](/images/talk-1-4.png)
@@ -75,11 +107,19 @@ does not implement `Hash`):
 In this picture, `String`, `i32` and `Option<i32>` have access to `Hash::*`
 while `Option<MyType>` and `Option<i32>` have access to `Option::*`. You can
 notice that, because `Option<i32>` has access to both, it lives in the
-intersection between `Hash` and `Option`.
+intersection between `Hash` and `Option`. If it were to implement yet another
+trait which depends on both (in this case, through conditional implementation),
+then it would lay inside a subset of \\(A \cap B\\).
 
 You could say that generics allow to statically generate types and that the
 content of the `impl` block is _really_ just an anonymous trait which is
 automatically implemented for all such types.
+
+Due to all of these properties, one could say that all types are created equal:
+there is no such thing as a _parent_ or a _child_ record &mdash; just subsets in
+a pool of possible value. Although it takes time to get used to this, it is much
+simpler than traditional OOP. You do not have to worry about constructors,
+inheritance, __TODO__
 
 Now, this _diagram_ thing might make the type-system look even more daunting
 then it already did. However, when compared to Ruby's mental model, for example,
@@ -212,8 +252,8 @@ independent interfaces.
 
 ## Lifetimes as a language
 
-When I wrote [ArcadeRS 1.4](/arcaders/arcaders-1-4), I defined the `Phi` type
-(responsible for caching, and abstracting away common operations), as such:
+As I was writing [ArcadeRS](/arcaders/arcaders-1-4), I defined the `Phi` type
+(responsible for caching, and simplifying common operations), as such:
 
 ```rust
 pub struct Phi<'p, 'r> {
@@ -222,19 +262,26 @@ pub struct Phi<'p, 'r> {
 }
 ```
 
-Basically, what this means is that, because its `events` attribute depends on
-SDL being initialized, it should not outlive the SDL context. `Phi` is also
-restrained by its second attribute, `renderer`, which depends on SDL being
-initialized, and as such should not outlive the SDL context. Damn it... did I
-read the same line twice? Wait, I did not?
+In this case, `Phi` is restrained by both of its attributes: `events` depends
+on the SDL library being initialized, while `renderer` stores the data for the
+window which, in turn, requires for the SDL library to be initialized. That is,
+both of those, for different reasons, must have a shorter lifespan than the SDL
+context.
 
-It is on this very moment that lifetimes _clicked_. They are often considered to
+It is upon realizing this that lifetimes _clicked_. They are often considered to
 be uber-complicated by newcomers and, in some cases, they are; however, the idea
-is incredibly simple. It's upon this realization that I stopped viewing explicit
-lifetimes as a pain in the ass, and started to consider them as teachers. They
-aren't always clear (I mean, c'mon: "mdsi_cannot infer an appropriate lifetime for
-lifetime parameter `'a` due to conflicting requirements_"... really?), but there
-is, more often than not, a valuable lesson at the end of the road.
+is incredibly simple. It's both a way to ask the compiler to watch our back, and
+a way to express invariants to other programmers. You just say: it does not make
+sense for a renderer to exist without a window to render to. In code. It's like
+documentation, except that it never gets outdated. Moreover, naming a lifetime
+is like naming a variable. Sometimes, the intent is obvious (e.g. `i` in a for
+loop); other times, a longer, clearer name should be preferred.
+
+It's upon this realization that I stopped viewing explicit lifetimes as a pain
+in the ass, and started to consider them as teachers. They aren't always clear
+(I mean, c'mon: "mdsi_cannot infer an appropriate lifetime for lifetime
+parameter `'a` due to conflicting requirements_"... really?), but there is, more
+often than not, a valuable lesson at the end of the road.
 
 In this instance, though without the help of the compiler, I learned that I
 could express `Phi` as:
@@ -258,6 +305,7 @@ Not only means _the returned value shouldn't outlive `self`_, it also specifies
 that, as long as it lives, `self` may not be mutated. This is because Rust
 ensures that we cannot change a value while it is being immutably borrowed.
 
-Yet, although lifetimes are powerful, they _are_ complex concepts that need to
-be learned. They are directly linked to Rust's goal of getting cost-free
-references.
+Although lifetimes are powerful, they _are_ complex concepts that need to be
+learned, resulting from Rust's goal of getting zero-cost, safe references.
+Yet, I would argue that dealing with lifetimes is often simpler than dealing
+with raw references as you would in C++.
