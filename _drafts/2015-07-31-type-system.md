@@ -100,10 +100,8 @@ of these other concepts which we've become so accustomed to. The language just
 forces you to be super-duper explicit about everything.
 
 Before moving on, you should probably wait for everything to sink in, because
-we're going to level up and review our model as we explore static and dynamic
-dispatch and conditional `impl`, and discuss a method through which Rust might
-be able to add inheritance-like code-reuse constructs while keeping its
-simplistic design.
+we're going to level up and make our model even more abstract as we explore
+static and dynamic dispatch and conditional `impl`.
 
 
 ## Extending the model
@@ -121,8 +119,8 @@ fn update_all<T: HasUpdate>(xs: &mut [T]) {
 
 * `T: HasUpdate` means _`T` is a subset of `HasUpdate`_.
 * `<T: HasUpdate>` means _given a subset `T` of `HasUpdate`_ (which will be
-    chosen on the call-site), there is a function which accepts a slice whose
-    items are elements of `T`.
+    chosen on the call-site), there is a function `update_all::<T>` which
+    accepts a slice whose items are elements of `T`.
 
 In our model, different generic instances are associated with different maps.
 That is, like in mathematics, `update_all::<Ork>` is different from
@@ -155,11 +153,11 @@ fn foo(x: i32) -> i32
 
 ... you _really_ mean that it accepts an argument `x` which is an element of
 `i32`: an element which _implements_ `i32`. Types do not exist at this level
-of abstraction. Only set-like traits and value-like elements exist.
+of abstraction. Only set-like traits and element-like values exist.
 
 ![Types are now subsets, like traits are](/images/talk-1-6.png)
 
-Types are replaced by `Sized` traits, a property which may not be possessed by
+Types implement the `Sized` trait, a property which may not be possessed by
 _normal_ traits, due to the fact that they do not carry any data. This explains
 the error message shown when attempting to define a function which accepts a
 trait instance as an argument:
@@ -179,8 +177,9 @@ traits (for convenience only, it's quite confusing at first), but do not
 implement `Sized`, so that a collection can store diverse values.
 
 However, as _users_ of these abstractions, we do not _need_ to worry about such
-details, and we gain much more power by ditching types and thinking exclusively
-in terms of traits (but not the other way around, which is the compiler's job).
+details. We gain much better insights by ditching types and thinking exclusively
+in terms of traits as subsets (and not the other way around, which is the
+compiler's job).
 
 What you have to do, then, is to create a sized value which holds on to an
 unsized one. Another way to put it is: we must store unsized trait objects
@@ -206,11 +205,103 @@ about data and processes? Simply in the same way that we always did:
 ![Blurring the line between traits and data](/images/talk-1-7.png)
 
 Now that we blurred the line between types and traits, we do not _need_ to go
-as deep to describe values. In the same way that we can say that many values
-inhabit a given type, many (diverse) values inhabit a trait. All you need is a
-bit of indirection for each leap of abstraction.
+as deep to describe values: `HasUpdate` _is_ the type. In the same way that we
+can say that many values inhabit a given type, many (diverse) values inhabit a
+trait. All you need is a bit of indirection for each leap of abstraction.
 
 Why doesn't Rust default to this system, then, if it is so powerful? Well, every
 indirection has a cost in terms of memory and performance. Rust is also designed
 for niches that require bare-metal manipulation of memory and greatly benefit
-from defaulting to the stack.
+from defaulting to the stack. As with everything which has a cost-penalty, Rust
+gives you the option to explicitly opt-into the feature, but will strive for the
+better performance (and safety) by default.
+
+
+## Conditional implementation
+
+Newcomers to Rust often complain about the verbosity of Rust's `impl` statements
+and, if you only use them to implement traits for types, they're quite boring. I
+mean, their sole purpose in this context is to say that a type set is included
+inside of a trait set. That's it!
+
+However, the place where the syntax really shines is when you start to talk
+about the ways in which _traits_ are related to each other. You do that through
+_conditional implementation_, which allow you to implement a trait for all types
+that respect a specific condition. For example:
+
+```rust
+impl<T: Mob> Entity for T {
+    // ...
+}
+```
+
+This says: every `T` which is a subset of `Mob` is also a subset of `Entity`,
+and every `Mob` shares the same implementation for the `Entity` trait.
+Graphically, `Mob` is contained by `Entity`, because while every item
+in `Mob` implements `Entity`, the inverse isn't true. This pattern is easily
+extended to intersections. For instance:
+
+```rust
+impl<T: A + B> C for T
+```
+
+... means that for every \\(T \in A \cap B,\ T \in C\\). In other words, the
+intersection of `A` and `B` is a subset of `C`. In general, it can be easily
+read out loud:
+
+* `impl`: let me implement
+* `<T: A + B>`: where \\(T \subset A \cap B\\)
+* `C`: the trait \\(C\\)
+* `for T` (a subset of \\(A \cap B\\))
+
+Or, all in one sentence:
+
+> Let me implement, where \\(T \subset A \cap B\\), the trait \\(C\\) `for T`.
+
+When you get something more complicated, it becomes harder to say out loud, but
+the principle stays the same:
+
+```rust
+impl<R: Num, C: Num> Add<Matrix<R, C>> for Matrix<R, C> {
+    type Output = Matrix<R, C>;
+    fn add(self, rhs: Matrix<R, C>) -> Matrix<R, C> { ... }
+}
+```
+
+> For all \\(R, C \subset Num\\), let `Matrix<R, C>` be a subset of
+> `Add<Matrix<R, C>, Output=Matrix<R, C>>` with the following implementation.
+
+You could say that conditional implementations enforce high-level behavior
+(entity) shared by many types, provided that they implement the required
+lower-level subtleties (mob).
+
+
+## Conclusion
+
+So, what is the _big picture_ here? Well, traits and values are _really_ all
+there is; the deeper you go, the more precise you get, until you reach _types_
+which are nothing more than subsets of `Sized` with a special syntax to
+manipulate the underlying memory and from where you cannot go deeper.
+
+Because of these properties, it is possible to manipulate values as though they
+were traits: greater abstraction at the price of control and indirection.
+
+Trait dependencies specify the subset in which a trait must exist, without
+specifying how to implement it, while conditional implementations (which are
+_really_ just the trait version of generic functions) specify the subset in
+which a trait exists, forcing similar types to share an part of their
+implementation.
+
+I'm still developing these ideas, so any insight that you might have is more
+than welcome. I believe that it is important to state the philosophy and the
+mathematical foundations of a language when we want it to evolve without it
+becoming the next bloated mess. It also helps to _reason_ in a given language;
+for example, when I'm unsure about about how my program's data structures should
+combine and cooperate.
+
+Plus I'm a big mathematics lover, and it makes me happy to connect
+([join](https://github.com/rust-lang/rfcs/blob/master/text/1102-rename-connect-to-join.md)? :P)
+the semantics of software development and set theory. Even if it probably
+doesn't change much in everyday programming.
+
+Anyway! 'hope you enjoyed.
