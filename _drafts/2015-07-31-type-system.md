@@ -11,7 +11,7 @@ putting them down on a screen could ease the process.
 
 The talk is going to be about Rust; more specifically, about medium-to-advanced
 type-system business, such as dynamic dispatch, phantom types and higher-order
-functions. While doing so, I'd like to share some methods of visualizing how the
+functions. While doing so, I'd like to share some methods to visualize how the
 different parts of Rust's type-system fit together.
 
 And I thought that I would tackle that last part right now.
@@ -25,11 +25,11 @@ concept of traits. It is through traits that one defines the interface of his
 data structures, overloads operators, marks concurrent types, and handles
 dynamic dispatch. One concept to rule them all!
 
-I assume that you know what traits are, so I won't go much further in there.
-What I would like to ask you, though, is _what does the colon mean_? What are
-you _really_ saying when you're writing `MyTrait: Add + Copy`? Well, let us
-first consider the set of all possible __values__ for which `let x: i32` means
-\\(x \in \mathbf i32\\).
+I assume that you already know what traits are, and so I won't linger too much
+on this topic. However, I would like to ask you: _what does the colon mean_?
+What are you _really_ saying when you write `MyTrait: Add + Copy`? Well, let us
+first consider the set of all possible __values__. In this context  `let x: i32`
+means \\(x \in \mathbf i32\\).
 
 This is trivial, yet things get interesting when you start to think about the
 properties of __traits__ in this model. The _obvious_ approach would be to treat
@@ -85,25 +85,19 @@ types. For example (where `MyType` does not implement `Hash`):
 In this picture, `String`, `i32` and `Option<i32>` have access to `Hash::*`
 while `Option<MyType>` and `Option<i32>` have access to `Option::*`. You can
 notice that, because `Option<i32>` has access to both, it lives within the
-intersection of `Hash` and `Option`. If it were to implement yet another trait
-which depends on both (in this case, through conditional implementation), then
-it would lay inside a subset of \\(A \cap B\\).
+intersection of `Hash` and `Option`.
 
-You could say that generics allow to statically generate types and that the
-content of the `impl` block is _really_ just an anonymous trait which is
-automatically implemented for all such types.
+From this example, you could infer that generics allow to automatically generate
+types on-demand and that an `impl MyType` block is _really_ just an anonymous
+trait which is automatically implemented for all instances of `MyType`.
 
 Now, this _diagram_ thing might make the type-system look even more daunting
-then it already did. However, when compared to Ruby's mental model, for example,
-we can see that Rust's is _much_ simpler to think about. It just asks you to be
-super-duper explicit about everything &mdash; which is necessary when you want
-either safety or performance, and even more so when you want both.
-
-From our model, one could say that all types are created equal: there is no such
-thing as a _parent_ or a _child_ record &mdash; just subsets in a pool of
-possible value. Although it takes time to get used to this, it is much simpler
-than traditional OOP. You do not have to worry about constructors, inheritance,
-and all of these other things that we've became so accustomed to.
+than it already did. However, when compared to Ruby's mental model, for example,
+we can see that Rust's is _much_ simpler to think about. For instance, all types
+are created equal; it makes no sense to talk about a _parent_ or a _child_ type,
+and we do not have to concern ourselves with constructors, inheritance, and all
+of these other concepts which we've become so accustomed to. The language just
+forces you to be super-duper explicit about everything.
 
 Before moving on, you should probably wait for everything to sink in, because
 we're going to level up and review our model as we explore static and dynamic
@@ -118,7 +112,7 @@ What about static and dynamic dispatch? Well, let's tackle __static dispatch__
 first. Say you define:
 
 ```rust
-fn foo<T: HasUpdate>(xs: &mut [T]) {
+fn update_all<T: HasUpdate>(xs: &mut [T]) {
     for x in xs {
         x.update();
     }
@@ -131,3 +125,92 @@ fn foo<T: HasUpdate>(xs: &mut [T]) {
     items are elements of `T`.
 
 In our model, different generic instances are associated with different maps.
+That is, like in mathematics, `update_all::<Ork>` is different from
+`update_all::<Gnome>`: they are defined over _completely distinct domains_.
+Trait-wise, the first implements `Fn(&mut [Ork])` and, the second,
+`Fn(&mut [Gnome])`.
+
+![A function instance selects only one type](/images/talk-1-5.png)
+
+Simple, isn't it? Now, handling __dynamic dispatch__ is a bit more convoluted,
+but bare with me!
+
+Remember when I told you that we omitted the `Sized` trait? Well, now, we're
+going to have to take it into account. As we go along, we're going to blur more
+and more the line between types and traits, data and processes.
+
+First, the _deeper_ you go in the trait hierarchy, the more _precise_ you get,
+and _types_ are the deepest that you can go (values are not considered). They
+allow you to access the physical data directly. But what if you didn't actually
+_need_ to be this precise; what if you wanted to talk abstractly about data,
+that is only through the traits that it implements?
+
+In this abstract model, types are just traits that provide accessor methods with
+a special syntax to manipulate the attributes. As such, when you declare a
+function...
+
+```rust
+fn foo(x: i32) -> i32
+```
+
+... you _really_ mean that it accepts an argument `x` which is an element of
+`i32`: an element which _implements_ `i32`. Types do not exist at this level
+of abstraction. Only set-like traits and value-like elements exist.
+
+![Types are now subsets, like traits are](/images/talk-1-6.png)
+
+Types are replaced by `Sized` traits, a property which may not be possessed by
+_normal_ traits, due to the fact that they do not carry any data. This explains
+the error message shown when attempting to define a function which accepts a
+trait instance as an argument:
+
+```
+<anon>:5:15: 5:17 error: the trait `core::marker::Sized` is not implemented for the type `HasUpdate` [E0277]
+<anon>:5 fn update_all(xs: HasUpdate) {
+                       ^~
+<anon>:5:15: 5:17 note: `HasUpdate` does not have a constant size known at compile-time
+<anon>:5 fn update_all(xs: HasUpdate) {
+```
+
+Notice how it complains about the _type_ `HasUpdate` not implementing `Sized`.
+But... we passed in a trait, right? It turns out that, behind the scenes, Rust
+actually generates _trait types_, which have the same name as their corresponding
+traits (for convenience only, it's quite confusing at first), but do not
+implement `Sized`, so that a collection can store diverse values.
+
+However, as _users_ of these abstractions, we do not _need_ to worry about such
+details, and we gain much more power by ditching types and thinking exclusively
+in terms of traits (but not the other way around, which is the compiler's job).
+
+What you have to do, then, is to create a sized value which holds on to an
+unsized one. Another way to put it is: we must store unsized trait objects
+behind a pointer. One usually uses a `Box` or a reference, but any pointer-like
+object defined by the standard library should do. For example:
+
+```rust
+fn update_all(xs: &mut [Box<HasUpdate>]) {
+    for x in xs {
+        x.update();
+    }
+}
+```
+
+With this function defined, all you have to do is store your values behind boxes
+and let `rustc` figure out how to call the good `update` method for each object;
+how to _dynamically dispatch_ the correct method at run-time. This is where the
+name of this trick comes from.
+
+Now that we got working _code_, how can we _visualize_ this new way to think
+about data and processes? Simply in the same way that we always did:
+
+![Blurring the line between traits and data](/images/talk-1-7.png)
+
+Now that we blurred the line between types and traits, we do not _need_ to go
+as deep to describe values. In the same way that we can say that many values
+inhabit a given type, many (diverse) values inhabit a trait. All you need is a
+bit of indirection for each leap of abstraction.
+
+Why doesn't Rust default to this system, then, if it is so powerful? Well, every
+indirection has a cost in terms of memory and performance. Rust is also designed
+for niches that require bare-metal manipulation of memory and greatly benefit
+from defaulting to the stack.
