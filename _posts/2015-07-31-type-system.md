@@ -238,8 +238,8 @@ impl<T: Mob> Entity for T {
 This says: every `T` which is a subset of `Mob` is also a subset of `Entity`,
 and every `Mob` shares the same implementation for the `Entity` trait.
 Graphically, `Mob` is contained by `Entity`, because while every item
-in `Mob` implements `Entity`, the inverse isn't true. This pattern is easily
-extended to intersections. For instance:
+in `Mob` implements `Entity`, the inverse isn't always true. This pattern is
+easily extended to intersections. For instance:
 
 ```rust
 impl<T: A + B> C for T
@@ -256,7 +256,7 @@ read out loud:
 
 Or, all in one sentence:
 
-> Let me implement, where \\(T \subset A \cap B\\), the trait \\(C\\) `for T`.
+> Let me implement the trait \\(C\\) for all \\(T \subset A \cap B\\).
 
 When you get something more complicated, it becomes harder to say out loud, but
 the principle stays the same:
@@ -272,8 +272,8 @@ impl<R: Num, C: Num> Add<Matrix<R, C>> for Matrix<R, C> {
 > `Add<Matrix<R, C>, Output=Matrix<R, C>>` with the following implementation.
 
 You could say that conditional implementations enforce high-level behavior
-(entity) shared by many types, provided that they implement the required
-lower-level subtleties (mob).
+(`Entity`) shared by many types, provided that they implement the required
+lower-level subtleties (`Mob`).
 
 
 ## Conclusion
@@ -289,19 +289,17 @@ were traits: greater abstraction at the price of control and indirection.
 Trait dependencies specify the subset in which a trait must exist, without
 specifying how to implement it, while conditional implementations (which are
 _really_ just the trait version of generic functions) specify the subset in
-which a trait exists, forcing similar types to share an part of their
-implementation.
+which a trait exists, forcing similar types to share a common behavior.
 
 I'm still developing these ideas, so any insight that you might have is more
 than welcome. I believe that it is important to state the philosophy and the
 mathematical foundations of a language when we want it to evolve without it
-becoming the next bloated mess. It also helps to _reason_ in a given language;
-for example, when I'm unsure about about how my program's data structures should
-combine and cooperate.
+becoming the next bloated mess. It also helps to _reason_ in a given language
+and write _idiomatic code_, whatever this means.
 
 Plus I'm a big mathematics lover, and it makes me happy to connect
 ([join](https://github.com/rust-lang/rfcs/blob/master/text/1102-rename-connect-to-join.md)? :P)
 the semantics of software development and set theory. Even if it probably
 doesn't change much in everyday programming.
 
-Anyway! 'hope you enjoyed.
+Anyway! Hope you enjoyed.
