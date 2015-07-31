@@ -88,6 +88,9 @@
 
 code {
     font-family: monospace;
-    font-size: 14px;
+}
+
+pre > code {
+    font-size: 15px;
     line-height: 0;
 }
