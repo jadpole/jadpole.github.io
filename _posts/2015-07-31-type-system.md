@@ -63,8 +63,8 @@ The approach using sets, however, is _much_ simpler to think about and it is
 possible because of the way __types__ work. Rust's adoption of the principle of
 _composition over inheritance_ means that types are pretty much independent. As
 such, you could say that they represent the smallest possible subset allowed by
-the language; a type can contain _elements_, but it cannot contain other traits
-or tangible types.
+the language; a type can contain _elements_ (values), but it cannot contain
+other _subsets_ (traits or tangible types).
 
 ![Types represented by distinct subsets](/images/talk-1-3.png)
 
@@ -81,6 +81,10 @@ the `Sized` trait, which we generally omit because, well, it contains most
 types. For example (where `MyType` does not implement `Hash`):
 
 ![Option defaults + Hash](/images/talk-1-4.png)
+
+> This works because, somewhere in the standard library, there is:
+>
+>     impl<T: Hash> Hash for Option<T>
 
 In this picture, `String`, `i32` and `Option<i32>` have access to `Hash::*`
 while `Option<MyType>` and `Option<i32>` have access to `Option::*`. You can
