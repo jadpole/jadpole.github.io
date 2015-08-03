@@ -21,8 +21,8 @@ And I thought that I would tackle that last part right now.
 
 The most flagrant example of Rust's minimalism is perhaps its type-system. It
 traded classical OOP for a more _functional_ approach based solely around the
-concept of traits. It is through traits that one defines the interface of his
-data structures, overloads operators, marks concurrent types, and handles
+concept of traits. It is through traits that we define the interface of our
+data structures, overload operators, marks concurrent types, and handle
 dynamic dispatch. One concept to rule them all!
 
 I assume that you already know what traits are, and so I won't linger too much
