@@ -9,7 +9,7 @@ body {
         max-width: $main-width;
         margin: auto;
         padding: 0 1rem;
-        
+
         @include media-query($on-laptop) {
             & { padding: 0; }
         }
@@ -39,16 +39,16 @@ body {
 
 #site-nav {
     float: right;
-    
+
     a {
         font-size: 18px;
         color: $text-color-1;
-        
+
         &:hover {
             color: lighten($text-color-1, 15%);
             text-decoration: underline;
         }
-        
+
         &:not(:first-child) {
             margin-left: 20px;
         }
@@ -71,7 +71,7 @@ body {
     .site-title {
         font-size: 1.2rem;
     }
-    
+
     ul {
         list-style-type: none;
         margin-left: 0;
@@ -96,7 +96,7 @@ body {
 
 #main {
     flex: 1;
-    
+
     .wrapper {
         padding: 1rem;
 
@@ -121,4 +121,14 @@ body {
 .post-meta {
     font-size: $small-font-size;
     color: $text-color-2;
+}
+
+
+
+/**
+ * In-post classes
+ */
+
+.tab-r {
+    padding-left: 2rem;
 }
