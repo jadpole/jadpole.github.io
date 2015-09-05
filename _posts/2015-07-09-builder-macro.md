@@ -4,10 +4,10 @@ title:  "A Rust macro for the builder pattern"
 categories: rust
 ---
 
-Real-world(ish) problem: you are developping, in Rust, a
+Real-world(ish) problem: you are developing, in Rust, a
 [Warcraft](https://www.wikiwand.com/fr/Warcraft_III:_Reign_of_Chaos)-like
 game which uses very dense data structures for the buildings and the mobs. Your
-team eventually decides to use the _builer pattern_ to ease the pain of
+team eventually decides to use the _builder pattern_ to ease the pain of
 writing and maintaining constructors with 20-ish variables.
 
 The two data structures which we are going to study today are reduced versions
@@ -199,8 +199,8 @@ struct $dest_name {
 Next, you generate the builder's structure. In this case, though, you want to
 have `Option<T>` attributes. When you call `ThingBuilder::new()`, attributes
 which have a default value will be set to `Some(default_value)`, while the
-others will be set to `None`. Basically, you set it to whathever you put on the
-right side of the equal sign, in your pattern. When the time will come to
+others will be set to `None`. Basically, you set it to whatever you put on the
+right side of the equals sign, in your pattern. When the time will come to
 `build()` the instance, you require from all attributes to be `Some`.
 
 Here's how it goes:
@@ -298,7 +298,7 @@ macro_rules! builder {
 
 Your `Farm` type, in this example, is slightly more complicated than the `Orc`.
 Not only do you want to store its level and its health, you also want to
-generate a level-dependent, random number for the kilograms of weat it produces
+generate a level-dependent, random number for the kilograms of wheat it produces
 every hour, which depends on the level you provided. Still, you generally
 create farms at the demand of the player; in which case, they are level 1 and
 have full health.
@@ -359,7 +359,7 @@ FarmBuilder::new()
 ```
 
 It's probably going to be more complicated in production code, and we loose the
-whole garantee that _all the arguments are provided to the constructor_ at
+whole guarantee that _all the arguments are provided to the constructor_ at
 compile-time, but until we have named arguments in Rust it does, its job pretty
 well.
 
@@ -369,7 +369,7 @@ well.
 Alright, it probably wasn't _really_ a real-world example, but then it would be
 much longer to write, and my point wouldn't be any clearer. You got to admit,
 though, that we managed to get something pretty impressive with way less code
-than it would have taken otherwise, thanks to macro the magnificient. I hope
+than it would have taken otherwise, thanks to macro the magnificent. I hope
 that it got you as excited about Rust as I am myself, because this language is
 incredible.
 
