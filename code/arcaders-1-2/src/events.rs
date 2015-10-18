@@ -1,14 +1,14 @@
-use ::sdl2::event::EventPump;
+use ::sdl2::EventPump;
 
-pub struct Events<'p> {
-    pump: EventPump<'p>,
+pub struct Events {
+    pump: EventPump,
 
     pub quit: bool,
     pub key_escape: bool,
 }
 
-impl<'p> Events<'p> {
-    pub fn new(pump: EventPump<'p>) -> Events<'p> {
+impl Events {
+    pub fn new(pump: EventPump) -> Events {
         Events {
             pump: pump,
 
@@ -16,7 +16,7 @@ impl<'p> Events<'p> {
             key_escape: false,
         }
     }
-    
+
     pub fn pump(&mut self) {
         for event in self.pump.poll_iter() {
             use ::sdl2::event::Event::*;
