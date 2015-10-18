@@ -1,6 +1,10 @@
 extern crate sdl2;
 
-#[macro_use] mod events;
+#[macro_use]
+mod events;
+
+use ::sdl2::pixels::Color;
+
 
 struct_events! {
     keyboard: {
@@ -14,13 +18,13 @@ struct_events! {
 }
 
 
-use sdl2::pixels::Color;
-
 fn main() {
-    let mut sdl_context = sdl2::init().video()
-        .build().unwrap();
+    // Initialize SDL2
+    let sdl_context = sdl2::init().unwrap();
+    let video = sdl_context.video().unwrap();
 
-    let window = sdl_context.window("ArcadeRS Shooter", 800, 600)
+    // Create the window
+    let window = video.window("ArcadeRS Shooter", 800, 600)
         .position_centered().opengl()
         .build().unwrap();
 
@@ -28,13 +32,15 @@ fn main() {
         .accelerated()
         .build().unwrap();
 
-    let mut events = Events::new(sdl_context.event_pump());
+    // Prepare the events record
+    let mut events = Events::new(sdl_context.event_pump().unwrap());
 
-    'game_loop: loop {
+
+    loop {
         events.pump();
 
         if true == events.now.quit || Some(true) == events.now.key_escape {
-            break 'game_loop;
+            break;
         }
 
         renderer.set_draw_color(Color::RGB(0, 0, 0));

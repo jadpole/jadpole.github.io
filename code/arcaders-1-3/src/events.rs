@@ -4,7 +4,7 @@ macro_rules! struct_events {
         else: { $( $e_alias:ident : $e_sdl:pat ),* }
     )
     => {
-        use ::sdl2::event::EventPump;
+        use ::sdl2::EventPump;
 
 
         pub struct ImmediateEvents {
@@ -22,8 +22,8 @@ macro_rules! struct_events {
         }
 
 
-        pub struct Events<'p> {
-            pump: EventPump<'p>,
+        pub struct Events {
+            pump: EventPump,
             pub now: ImmediateEvents,
 
             // true  => pressed
@@ -31,8 +31,8 @@ macro_rules! struct_events {
             $( pub $k_alias: bool ),*
         }
 
-        impl<'p> Events<'p> {
-            pub fn new(pump: EventPump<'p>) -> Events<'p> {
+        impl Events {
+            pub fn new(pump: EventPump) -> Events {
                 Events {
                     pump: pump,
                     now: ImmediateEvents::new(),
