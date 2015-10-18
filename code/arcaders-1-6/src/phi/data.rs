@@ -1,5 +1,6 @@
 use ::sdl2::rect::Rect as SdlRect;
 
+
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Rectangle {
     pub x: f64,
@@ -21,7 +22,7 @@ impl Rectangle {
             .unwrap()
     }
 
-    /// Returns a (perhaps moved) rectangle which is contained by a `parent`
+    /// Return a (perhaps moved) rectangle which is contained by a `parent`
     /// rectangle. If it can indeed be moved to fit, return `Some(result)`;
     /// otherwise, return `None`.
     pub fn move_inside(self, parent: Rectangle) -> Option<Rectangle> {

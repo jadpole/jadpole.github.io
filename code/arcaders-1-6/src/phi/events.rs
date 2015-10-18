@@ -4,7 +4,7 @@ macro_rules! struct_events {
         else: { $( $e_alias:ident : $e_sdl:pat ),* }
     )
     => {
-        use ::sdl2::event::EventPump;
+        use ::sdl2::EventPump;
 
 
         pub struct ImmediateEvents {
@@ -24,19 +24,22 @@ macro_rules! struct_events {
         }
 
 
-        pub struct Events<'p> {
-            pump: EventPump<'p>,
+        pub struct Events {
+            pump: EventPump,
             pub now: ImmediateEvents,
 
+            // true  => pressed
+            // false => not pressed
             $( pub $k_alias: bool ),*
         }
 
-        impl<'p> Events<'p> {
-            pub fn new(pump: EventPump<'p>) -> Events<'p> {
+        impl Events {
+            pub fn new(pump: EventPump) -> Events {
                 Events {
                     pump: pump,
                     now: ImmediateEvents::new(),
 
+                    // By default, initialize every key with _not pressed_
                     $( $k_alias: false ),*
                 }
             }
@@ -51,10 +54,14 @@ macro_rules! struct_events {
 
                     match event {
                         Window { win_event_id: Resized, .. } => {
-                            self.now.resize = Some(renderer.get_output_size().unwrap());
+                            self.now.resize = Some(renderer.output_size().unwrap());
                         },
 
                         KeyDown { keycode, .. } => match keycode {
+                            // $( ... ),* containing $k_sdl and $k_alias means:
+                            //   "for every element ($k_alias : $k_sdl) pair,
+                            //    check whether the keycode is Some($k_sdl). If
+                            //    it is, then set the $k_alias fields to true."
                             $(
                                 Some($k_sdl) => {
                                     // Prevent multiple presses when keeping a key down
@@ -66,7 +73,7 @@ macro_rules! struct_events {
 
                                     self.$k_alias = true;
                                 }
-                            ),*
+                            ),* // and add a comma after every option
                             _ => {}
                         },
 
@@ -86,6 +93,7 @@ macro_rules! struct_events {
                                 self.now.$e_alias = true;
                             }
                         )*,
+
 
                         _ => {}
                     }
