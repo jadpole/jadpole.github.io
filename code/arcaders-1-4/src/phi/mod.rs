@@ -34,14 +34,6 @@ pub enum ViewAction {
 
 
 pub trait View {
-    /// Called when `self` becomes the main, rendered view.
-    fn resume(&mut self, _context: &mut Phi) {
-    }
-
-    /// Called when `self` stops being the main, rendered view.
-    fn pause(&mut self, _context: &mut Phi) {
-    }
-
     /// Called on every frame to take care of both the logic and
     /// the rendering of the current view.
     ///

@@ -101,13 +101,11 @@ where F: Fn(&mut Phi) -> Box<View> {
             .build().unwrap(),
     };
 
-    // Create and show the default view
+    // Create the default view
     let mut current_view = init(&mut context);
-    current_view.resume(&mut context);
 
 
     // Frame timing
-
     let interval = 1_000 / 60;
     let mut before = timer.ticks();
     let mut last_second = timer.ticks();
@@ -142,16 +140,14 @@ where F: Fn(&mut Phi) -> Box<View> {
         context.events.pump();
 
         match current_view.render(&mut context, elapsed) {
-            ViewAction::None => context.renderer.present(),
-            ViewAction::Quit => {
-                current_view.pause(&mut context);
-                break;
-            },
-            ViewAction::ChangeView(new_view) => {
-                current_view.pause(&mut context);
-                current_view = new_view;
-                current_view.resume(&mut context);
-            }
+            ViewAction::None =>
+                context.renderer.present(),
+
+            ViewAction::Quit =>
+                break,
+
+            ViewAction::ChangeView(new_view) =>
+                current_view = new_view,
         }
     }
 }
