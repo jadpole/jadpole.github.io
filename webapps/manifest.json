@@ -1,6 +1,0 @@
-{
-    "short_name": "Sandbox",
-    "name": "Android Web Sandbox",
-    "start_url": "/webapps/index.html",
-    "display": "standalone",
-}
