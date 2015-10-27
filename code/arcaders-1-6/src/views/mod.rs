@@ -71,8 +71,8 @@ impl View for ShipView {
         let movable_region = Rectangle {
             x: 0.0,
             y: 0.0,
-            w: phi.output_size().0 as f64 * 0.70,
-            h: phi.output_size().1 as f64,
+            w: phi.output_size().0 * 0.70,
+            h: phi.output_size().1,
         };
 
         // If the player cannot fit in the screen, then there is a problem and

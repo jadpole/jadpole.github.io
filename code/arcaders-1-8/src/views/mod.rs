@@ -14,6 +14,7 @@ const SHIP_H: f64 = 39.0;
 const DEBUG: bool = false;
 
 
+#[derive(Clone)]
 struct Background {
     pos: f64,
     // The amount of pixels moved to the left every second
@@ -33,18 +34,18 @@ impl Background {
 
         // We determine the scale ratio of the window to the sprite.
         let (win_w, win_h) = renderer.output_size().unwrap();
-        let scale = win_h as f64 / size.1;
+        let scale = win_h / size.1;
 
         // We render as many copies of the background as necessary to fill
         // the screen.
         let mut physical_left = -self.pos * scale;
 
-        while physical_left < win_w as f64 {
+        while physical_left < win_w {
             renderer.copy_sprite(&self.sprite, Rectangle {
                 x: physical_left,
                 y: 0.0,
                 w: size.0 * scale,
-                h: win_h as f64,
+                h: win_h,
             });
 
             physical_left += size.0 * scale;
@@ -171,8 +172,8 @@ impl View for ShipView {
         let movable_region = Rectangle {
             x: 0.0,
             y: 0.0,
-            w: phi.output_size().0 as f64 * 0.70,
-            h: phi.output_size().1 as f64,
+            w: phi.output_size().0 * 0.70,
+            h: phi.output_size().1,
         };
 
         // If the player cannot fit in the screen, then there is a problem and
