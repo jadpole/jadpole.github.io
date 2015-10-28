@@ -2,7 +2,7 @@ use ::phi::{Phi, View, ViewAction};
 use ::phi::data::Rectangle;
 use ::phi::gfx::{CopySprite, Sprite};
 use ::sdl2::pixels::Color;
-use ::views::shared::{Background, BgSet};
+use ::views::shared::BgSet;
 
 
 /// Pixels traveled by the player's ship every second, when it is moving.
@@ -44,51 +44,12 @@ pub struct ShipView {
 }
 
 impl ShipView {
+    /// We temporarily keep this so that we can instanciate `ShipView` in
+    /// `main` while developing it further.
+    #[allow(dead_code)]
     pub fn new(phi: &mut Phi) -> ShipView {
-        let spritesheet = Sprite::load(&mut phi.renderer, "assets/spaceship.png").unwrap();
-        let mut sprites = Vec::with_capacity(9);
-
-        for y in 0..3 {
-            for x in 0..3 {
-                sprites.push(spritesheet.region(Rectangle {
-                    w: SHIP_W,
-                    h: SHIP_H,
-                    x: SHIP_W * x as f64,
-                    y: SHIP_H * y as f64,
-                }).unwrap());
-            }
-        }
-
-        ShipView {
-            player: Ship {
-                rect: Rectangle {
-                    x: 64.0,
-                    y: 64.0,
-                    w: SHIP_W,
-                    h: SHIP_H,
-                },
-                sprites: sprites,
-                current: ShipFrame::MidNorm,
-            },
-
-            bg: BgSet {
-                back: Background {
-                    pos: 0.0,
-                    vel: 20.0,
-                    sprite: Sprite::load(&mut phi.renderer, "assets/starBG.png").unwrap(),
-                },
-                middle: Background {
-                    pos: 0.0,
-                    vel: 40.0,
-                    sprite: Sprite::load(&mut phi.renderer, "assets/starMG.png").unwrap(),
-                },
-                front: Background {
-                    pos: 0.0,
-                    vel: 80.0,
-                    sprite: Sprite::load(&mut phi.renderer, "assets/starFG.png").unwrap(),
-                },
-            },
-        }
+        let bg = BgSet::new(&mut phi.renderer);
+        ShipView::with_backgrounds(phi, bg)
     }
 
     pub fn with_backgrounds(phi: &mut Phi, bg: BgSet) -> ShipView {

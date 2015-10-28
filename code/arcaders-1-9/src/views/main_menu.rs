@@ -2,7 +2,7 @@ use ::phi::{Phi, View, ViewAction};
 use ::phi::data::Rectangle;
 use ::phi::gfx::{CopySprite, Sprite};
 use ::sdl2::pixels::Color;
-use ::views::shared::{Background, BgSet};
+use ::views::shared::BgSet;
 
 
 const ACTION_FONT: &'static str = "assets/belligerent.ttf";
@@ -40,35 +40,8 @@ pub struct MainMenuView {
 
 impl MainMenuView {
     pub fn new(phi: &mut Phi) -> MainMenuView {
-        MainMenuView {
-            actions: vec![
-                Action::new(phi, "New Game", Box::new(|phi, _| {
-                    ViewAction::ChangeView(Box::new(::views::game::ShipView::new(phi)))
-                })),
-                Action::new(phi, "Quit", Box::new(|_, _| {
-                    ViewAction::Quit
-                })),
-            ],
-            selected: 0,
-
-            bg: BgSet {
-                back: Background {
-                    pos: 0.0,
-                    vel: 20.0,
-                    sprite: Sprite::load(&mut phi.renderer, "assets/starBG.png").unwrap(),
-                },
-                middle: Background {
-                    pos: 0.0,
-                    vel: 40.0,
-                    sprite: Sprite::load(&mut phi.renderer, "assets/starMG.png").unwrap(),
-                },
-                front: Background {
-                    pos: 0.0,
-                    vel: 80.0,
-                    sprite: Sprite::load(&mut phi.renderer, "assets/starFG.png").unwrap(),
-                },
-            },
-        }
+        let bg = BgSet::new(&mut phi.renderer);
+        MainMenuView::with_backgrounds(phi, bg)
     }
 
     pub fn with_backgrounds(phi: &mut Phi, bg: BgSet) -> MainMenuView {
