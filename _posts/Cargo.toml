@@ -1,9 +1,0 @@
-[package]
-name = "arcade-rs"
-version = "0.1.0"
-authors = ["John Doe <john.doe@example.com>"]
-
-[dependencies]
-sdl2 = "0.9"
-sdl2_image = "0.3"
-sdl2_ttf = "0.9"

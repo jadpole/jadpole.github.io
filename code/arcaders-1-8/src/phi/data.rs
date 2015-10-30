@@ -1,13 +1,6 @@
 use ::sdl2::rect::Rect as SdlRect;
 
 
-macro_rules! d {
-    ( $x:expr ) => {
-        if $x { true } else { panic!(stringify!($x)) }
-    }
-}
-
-
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Rectangle {
     pub x: f64,
