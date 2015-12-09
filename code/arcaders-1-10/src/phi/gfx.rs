@@ -80,6 +80,7 @@ impl Renderable for Sprite {
 
 
 
+#[derive(Clone)]
 pub struct AnimatedSprite {
     /// The frames that will be rendered, in order.
     sprites: Rc<Vec<Sprite>>,
