@@ -7,6 +7,7 @@ baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://jadpole.github.io" # the base hostname & protocol for your site
 # witter_username: jekyllrb
 github_username:  jadpole
+twitter_username: jadpole
 
 gems:
   - jekyll-redirect-from
