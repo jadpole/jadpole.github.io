@@ -498,19 +498,12 @@ impl View for ShipView {
 
 
         // Update the bullets
-        {
-            let mut old_bullets = vec![];
-            ::std::mem::swap(&mut self.bullets, &mut old_bullets);
-
-            // Takes ownership of the old vector, so it deletes it once it's
-            // done iterating over it.
-            let mut new_bullets =
-                old_bullets.into_iter()
-                .filter_map(|bullet: Box<Bullet>| bullet.update(phi, elapsed))
-                .collect();
-
-            ::std::mem::swap(&mut self.bullets, &mut new_bullets);
-        }
+        let old_bullets = ::std::mem::replace(&mut self.bullets, vec![]);
+        
+        self.bullets =
+            old_bullets.into_iter()
+            .filter_map(|bullet| bullet.update(phi, elapsed))
+            .collect();
 
         // Allow the player to shoot after the bullets are updated, so that,
         // when rendered for the first time, they are drawn wherever they
