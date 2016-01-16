@@ -52,8 +52,6 @@ struct Asteroid {
 
 impl Asteroid {
     fn new(phi: &mut Phi) -> Asteroid {
-        let (w, h) = phi.output_size();
-
         let mut asteroid =
             Asteroid {
                 sprite: Asteroid::get_sprite(phi, 1.0),

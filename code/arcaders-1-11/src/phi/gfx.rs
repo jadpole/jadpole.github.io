@@ -142,7 +142,7 @@ impl AnimatedSprite {
 
         // If we decide to go "back in time", this allows us to select the
         // last frame whenever we reach a negative one.
-        if (self.current_time < 0.0) {
+        if self.current_time < 0.0 {
             self.current_time = (self.frames() - 1) as f64 * self.frame_delay;
         }
     }
