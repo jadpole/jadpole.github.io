@@ -3,7 +3,7 @@ extern crate sdl2;
 #[macro_use]
 mod events;
 
-use ::sdl2::pixels::Color;
+use sdl2::pixels::Color;
 
 
 struct_events! {
@@ -39,7 +39,7 @@ fn main() {
     loop {
         events.pump();
 
-        if true == events.now.quit || Some(true) == events.now.key_escape {
+        if events.now.quit || events.now.key_escape == Some(true) {
             break;
         }
 

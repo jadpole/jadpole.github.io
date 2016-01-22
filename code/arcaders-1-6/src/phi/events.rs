@@ -4,7 +4,7 @@ macro_rules! struct_events {
         else: { $( $e_alias:ident : $e_sdl:pat ),* }
     )
     => {
-        use ::sdl2::EventPump;
+        use sdl2::EventPump;
 
 
         pub struct ImmediateEvents {
@@ -48,9 +48,9 @@ macro_rules! struct_events {
                 self.now = ImmediateEvents::new();
 
                 for event in self.pump.poll_iter() {
-                    use ::sdl2::event::Event::*;
-                    use ::sdl2::event::WindowEventId::Resized;
-                    use ::sdl2::keyboard::Keycode::*;
+                    use sdl2::event::Event::*;
+                    use sdl2::event::WindowEventId::Resized;
+                    use sdl2::keyboard::Keycode::*;
 
                     match event {
                         Window { win_event_id: Resized, .. } => {

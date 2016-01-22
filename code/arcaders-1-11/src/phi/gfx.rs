@@ -1,9 +1,9 @@
-use ::phi::data::Rectangle;
-use ::std::cell::RefCell;
-use ::std::path::Path;
-use ::std::rc::Rc;
-use ::sdl2::render::{Renderer, Texture};
-use ::sdl2_image::LoadTexture;
+use phi::data::Rectangle;
+use std::cell::RefCell;
+use std::path::Path;
+use std::rc::Rc;
+use sdl2::render::{Renderer, Texture};
+use sdl2_image::LoadTexture;
 
 
 /// Common interface for rendering a graphical component to some given region

@@ -1,5 +1,5 @@
-use ::phi::{Phi, View, ViewAction};
-use ::sdl2::pixels::Color;
+use phi::{Phi, View, ViewAction};
+use sdl2::pixels::Color;
 
 
 pub struct ViewA;
@@ -9,11 +9,11 @@ impl View for ViewA {
         let renderer = &mut context.renderer;
         let events = &context.events;
 
-        if events.now.quit || Some(true) == events.now.key_escape {
+        if events.now.quit || events.now.key_escape == Some(true) {
             return ViewAction::Quit;
         }
 
-        if Some(true) == events.now.key_space {
+        if events.now.key_space == Some(true) {
             return ViewAction::ChangeView(Box::new(ViewB));
         }
 
@@ -32,11 +32,11 @@ impl View for ViewB {
         let renderer = &mut context.renderer;
         let events = &context.events;
 
-        if events.now.quit || Some(true) == events.now.key_escape {
+        if events.now.quit || events.now.key_escape == Some(true) {
             return ViewAction::Quit;
         }
 
-        if Some(true) == events.now.key_space {
+        if events.now.key_space == Some(true) {
             return ViewAction::ChangeView(Box::new(ViewA));
         }
 

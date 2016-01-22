@@ -1,4 +1,4 @@
-use ::sdl2::rect::Rect as SdlRect;
+use sdl2::rect::Rect as SdlRect;
 
 
 #[derive(Clone, Copy, Debug, PartialEq)]

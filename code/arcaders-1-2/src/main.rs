@@ -2,8 +2,8 @@ extern crate sdl2;
 
 mod events;
 
-use ::sdl2::pixels::Color;
-use ::events::Events;
+use sdl2::pixels::Color;
+use events::Events;
 
 
 fn main() {

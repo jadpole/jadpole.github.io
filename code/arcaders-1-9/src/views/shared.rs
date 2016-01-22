@@ -1,6 +1,6 @@
-use ::phi::data::Rectangle;
-use ::phi::gfx::{CopySprite, Sprite};
-use ::sdl2::render::Renderer;
+use phi::data::Rectangle;
+use phi::gfx::{CopySprite, Sprite};
+use sdl2::render::Renderer;
 
 
 #[derive(Clone)]

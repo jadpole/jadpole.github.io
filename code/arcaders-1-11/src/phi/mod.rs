@@ -4,10 +4,10 @@ pub mod data;
 pub mod gfx;
 
 use self::gfx::Sprite;
-use ::sdl2::render::Renderer;
-use ::sdl2::pixels::Color;
-use ::std::collections::HashMap;
-use ::std::path::Path;
+use sdl2::render::Renderer;
+use sdl2::pixels::Color;
+use std::collections::HashMap;
+use std::path::Path;
 
 
 struct_events! {

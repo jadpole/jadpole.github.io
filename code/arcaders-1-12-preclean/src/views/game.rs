@@ -1,8 +1,8 @@
-use ::phi::{Phi, View, ViewAction};
-use ::phi::data::{MaybeAlive, Rectangle};
-use ::phi::gfx::{AnimatedSprite, AnimatedSpriteDescr, CopySprite, Sprite};
-use ::sdl2::pixels::Color;
-use ::views::shared::BgSet;
+use phi::{Phi, View, ViewAction};
+use phi::data::{MaybeAlive, Rectangle};
+use phi::gfx::{AnimatedSprite, AnimatedSpriteDescr, CopySprite, Sprite};
+use sdl2::pixels::Color;
+use views::shared::BgSet;
 
 
 /// Pixels traveled by the player's ship every second, when it is moving.

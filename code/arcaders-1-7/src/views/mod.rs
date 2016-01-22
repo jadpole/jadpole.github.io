@@ -1,7 +1,7 @@
-use ::phi::{Phi, View, ViewAction};
-use ::phi::data::Rectangle;
-use ::phi::gfx::{CopySprite, Sprite};
-use ::sdl2::pixels::Color;
+use phi::{Phi, View, ViewAction};
+use phi::data::Rectangle;
+use phi::gfx::{CopySprite, Sprite};
+use sdl2::pixels::Color;
 
 
 /// Pixels traveled by the player's ship every second, when it is moving.

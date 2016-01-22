@@ -1,8 +1,8 @@
-use ::phi::{Phi, View, ViewAction};
-use ::phi::data::Rectangle;
-use ::phi::gfx::{CopySprite, Sprite};
-use ::sdl2::pixels::Color;
-use ::views::shared::BgSet;
+use phi::{Phi, View, ViewAction};
+use phi::data::Rectangle;
+use phi::gfx::{CopySprite, Sprite};
+use sdl2::pixels::Color;
+use views::shared::BgSet;
 
 
 const ACTION_FONT: &'static str = "assets/belligerent.ttf";

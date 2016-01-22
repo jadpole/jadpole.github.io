@@ -2,7 +2,7 @@
 mod events;
 pub mod data;
 
-use ::sdl2::render::Renderer;
+use sdl2::render::Renderer;
 
 
 struct_events! {

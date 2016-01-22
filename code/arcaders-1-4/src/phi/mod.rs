@@ -1,7 +1,7 @@
 #[macro_use]
 mod events;
 
-use ::sdl2::render::Renderer;
+use sdl2::render::Renderer;
 
 
 struct_events! {

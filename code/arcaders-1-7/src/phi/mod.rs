@@ -3,7 +3,7 @@ mod events;
 pub mod data;
 pub mod gfx;
 
-use ::sdl2::render::Renderer;
+use sdl2::render::Renderer;
 
 
 struct_events! {
