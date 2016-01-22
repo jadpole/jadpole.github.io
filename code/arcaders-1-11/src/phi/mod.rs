@@ -41,8 +41,6 @@ pub struct Phi<'window> {
 
 impl<'window> Phi<'window> {
     fn new(events: Events, renderer: Renderer<'window>) -> Phi<'window> {
-        ::sdl2_image::init(::sdl2_image::INIT_PNG);
-
         Phi {
             events: events,
             renderer: renderer,
@@ -69,12 +67,6 @@ impl<'window> Phi<'window> {
                 self.cached_fonts.insert((font_path, size), font);
                 self.ttf_str_sprite(text, font_path, size, color)
             })
-    }
-}
-
-impl<'window> Drop for Phi<'window> {
-    fn drop(&mut self) {
-        ::sdl2_image::quit();
     }
 }
 
@@ -133,7 +125,8 @@ where F: Fn(&mut Phi) -> Box<View> {
     let sdl_context = ::sdl2::init().unwrap();
     let video = sdl_context.video().unwrap();
     let mut timer = sdl_context.timer().unwrap();
-    let _ttf_context = ::sdl2_ttf::init();
+    let _image_context = ::sdl2_image::init(::sdl2_image::INIT_PNG).unwrap();
+    let _ttf_context = ::sdl2_ttf::init().unwrap();
 
     // Create the window
     let window = video.window(title, 800, 600)
