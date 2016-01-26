@@ -132,3 +132,25 @@ body {
 .tab-r {
     padding-left: 2rem;
 }
+
+span[title] {
+    color: #009688;
+    cursor: help;
+    border-bottom: 1px dotted #009688;
+}
+
+span[title]:hover {
+    color: #00bfa5;
+}
+
+
+
+/**
+ * HTML5 components
+ */
+
+audio {
+    width: 90%;
+    display: block;
+    margin: 12px auto;
+}
