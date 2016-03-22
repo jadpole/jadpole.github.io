@@ -2,6 +2,7 @@ extern crate sdl2;
 
 use sdl2::pixels::Color;
 use std::thread;
+use std::time::Duration;
 
 fn main() {
     // Initialize SDL2
@@ -22,5 +23,5 @@ fn main() {
     renderer.clear();
     renderer.present();
 
-    thread::sleep_ms(3000);
+    thread::sleep(Duration::from_millis(3000));
 }
