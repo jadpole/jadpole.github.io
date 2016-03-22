@@ -13,9 +13,7 @@ gems:
   - jekyll-redirect-from
 
 # Build settings
-markdown: redcarpet
-
-redcarpet:
-  extensions: [ "tables" ]
+kramdown:
+  input: GFM
 
 permalink: "/:categories/:title"

@@ -123,19 +123,19 @@ skinny_builder!(UserBuilder => User,
         name: String = None,
         age: i32 = Some(0)
     },
-    
+
     // constructor -> Result<User, &'static str>
     // You can change the Err type by modifying the macro, or extend it to
     // be able to specify the Err type manually every time. For the sake of
     // this demo, however, we keep it simple.
     constructor: {
         let err = "Argument missing";
-        
+
         // `name` and `age` are automatically available:
         // Here, we redefine them by trying to get their value.
         let name = try!(name.ok_or(err));
         let age = try!(age.ok_or(err));
-        
+
         Ok(User {
             name: name,
             age: age,
@@ -164,11 +164,11 @@ builder!(OrcBuilder => Orc {
     health: i32 = Some(100),
     level: i32 = Some(1),
     experience: i32 = Some(0),
-    
+
     // This works because the provided expression will simply be inserted
     // inside the OrcBuilder constructor.
     name: String = Some("Orc".to_owned()),
-    
+
     position: (i32, i32) = None,
     weapon: Box<Weapon>  = None
 });
@@ -221,11 +221,11 @@ impl $src_name {
 
     pub fn build(self) -> Result<$dest_name, &'static str> {
         let err = "Argument missing";
-        
+
         $(
             let $attr_name = try!(self.$attr_name.ok_or(err));
         )*
-        
+
         Ok($dest_name {
             $( $attr_name : $attr_name ),*
         })
@@ -256,11 +256,11 @@ macro_rules! builder {
         struct $dest_name {
             $( $attr_name : $attr_type ),*
         }
-        
+
         struct $src_name {
             $( $attr_name : Option<$attr_type> ),*
         }
-        
+
         impl $src_name {
             pub fn new() -> $src_name {
                 $src_name {
@@ -269,19 +269,19 @@ macro_rules! builder {
                     ),*
                 }
             }
-        
+
             pub fn build(self) -> Result<$dest_name, &'static str> {
                 let err = "Argument missing";
-                
+
                 $(
                     let $attr_name = try!(self.$attr_name.ok_or(err));
                 )*
-                
+
                 Ok($dest_name {
                     $( $attr_name : $attr_name ),*
                 })
             }
-            
+
             $(
                 fn $attr_name(mut self, value: $attr_type) -> Self {
                     self.$attr_name = Some(value);
@@ -326,16 +326,16 @@ skinny_builder!(UserBuilder => User,
         health     : i32 = Some(100),
         level      : i32 = Some(1),
         experience : i32 = Some(0),
-        
+
         position   : (i32, i32) = None,
         kilograms_every_hour: i32 = None,
     },
     constructor: {
         let err = "Argument missing";
-        
+
         // We know it will never be `None` because it has a default value.
         let level = level.unwrap();
-        
+
         Ok(Farm {
             health: health.unwrap(),
             level: level,
@@ -373,7 +373,7 @@ than it would have taken otherwise, thanks to macro the magnificent. I hope
 that it got you as excited about Rust as I am myself, because this language is
 incredible.
 
-If you haven't checked it out already, I've been writing a [tutorial](/arcaders/arcaders-1-0/)
+If you haven't checked it out already, I've been writing a [tutorial](/arcaders/arcaders-1-0)
 about how the different features of Rust fit together. To do so, we're creating
 a game. And we're using macros, pattern matching, trait objects, and all kinds
 of rusty goodies to do it. I've still got some caveats to fix and a lot of
