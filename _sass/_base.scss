@@ -187,28 +187,19 @@ strong {
         color: #770088;
     }
 
-    .highlight {
-        pre,
-        code {
-            color: $text-color-1;
-            border: 1px solid $text-color-4;
-            border-radius: 3px;
-            background-color: #fafafa;
-        }
+    pre.highlight {
+        color: $text-color-1;
+        border: 1px solid $text-color-4;
+        border-radius: 3px;
+        background-color: #fafafa;
+        padding: 8px 12px;
+        overflow-x: auto;
 
-        code {
-            padding: 1px 5px;
-        }
-
-        pre {
-            padding: 8px 12px;
-            overflow-x: auto;
-
-            > code {
-                border: 0;
-                padding-right: 0;
-                padding-left: 0;
-            }
+        > code {
+            color: #111;
+            border: 0;
+            padding-right: 0;
+            padding-left: 0;
         }
     }
 }
