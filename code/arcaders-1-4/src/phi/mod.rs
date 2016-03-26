@@ -4,6 +4,7 @@ mod events;
 use sdl2::render::Renderer;
 
 
+// Generate an `Events` structure to record SDL events.
 struct_events! {
     keyboard: {
         key_escape: Escape,
@@ -16,23 +17,24 @@ struct_events! {
 }
 
 
-/// Bundles the Phi abstractions in a single structure which
-/// can be passed easily between functions.
+/// Bundles the Phi abstractions in a single structure which  can be passed
+/// easily between functions.
 pub struct Phi<'window> {
     pub events: Events,
     pub renderer: Renderer<'window>,
 }
 
 
-/// A `ViewAction` is a way for the currently executed view to
-/// communicate with the game loop. It specifies which action
-/// should be executed before the next rendering.
+/// A `ViewAction` is a way for the currently executed view to communicate with
+/// the game loop. It specifies which action should be executed before the next
+/// rendering.
 pub enum ViewAction {
     None,
     Quit,
 }
 
-
+/// Interface through which Phi interacts with the possible states in which the
+/// application can be.
 pub trait View {
     /// Called on every frame to take care of both the logic and
     /// the rendering of the current view.
