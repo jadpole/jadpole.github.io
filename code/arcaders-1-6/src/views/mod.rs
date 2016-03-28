@@ -7,39 +7,43 @@ use sdl2::pixels::Color;
 const PLAYER_SPEED: f64 = 180.0;
 
 
+/// The player's ship, currently represented by its bounding-box.
 struct Ship {
     rect: Rectangle,
 }
 
 
-pub struct ShipView {
+/// The main view of our game, in which the player is able to control his ship,
+/// which is currently represented by a rectangle.
+pub struct GameView {
     player: Ship,
 }
 
-impl ShipView {
-    pub fn new(phi: &mut Phi) -> ShipView {
-        ShipView {
+impl GameView {
+    /// Create a new `GameView` with the ship on the point (64, 64), which is
+    /// arbitrary, but does the job for now.
+    pub fn new(phi: &mut Phi) -> GameView {
+        GameView {
             player: Ship {
-                rect: Rectangle {
-                    x: 64.0,
-                    y: 64.0,
-                    w: 32.0,
-                    h: 32.0,
-                }
+                rect: Rectangle { x: 64.0, y: 64.0, w: 32.0, h: 32.0 },
             }
         }
     }
 }
 
-impl View for ShipView {
+impl View for GameView {
+    /// Render and move the player's ship according to keyboard events.
     fn render(&mut self, phi: &mut Phi, elapsed: f64) -> ViewAction {
+        // Quit the game if asked to
         if phi.events.now.quit || phi.events.now.key_escape == Some(true) {
             return ViewAction::Quit;
         }
 
+        if phi.events.now.resize {
+            println!("{:?}", phi.output_size());
+        }
 
         // Move the player's ship
-
         let diagonal =
             (phi.events.key_up ^ phi.events.key_down) &&
             (phi.events.key_left ^ phi.events.key_right);
@@ -63,11 +67,6 @@ impl View for ShipView {
         self.player.rect.x += dx;
         self.player.rect.y += dy;
 
-        // The movable region spans the entire height of the window and 70% of its
-        // width. This way, the player cannot get to the far right of the screen, where
-        // we will spawn the asteroids, and get immediately eliminated.
-        //
-        // We restrain the width because most screens are wider than they are high.
         let movable_region = Rectangle {
             x: 0.0,
             y: 0.0,
@@ -75,19 +74,18 @@ impl View for ShipView {
             h: phi.output_size().1,
         };
 
-        // If the player cannot fit in the screen, then there is a problem and
-        // the game should be promptly aborted.
+        // If the player resizes the screen so that the ship can't fit in it
+        // anymore, then there is a problem and the game should be aborted.
         self.player.rect = self.player.rect.move_inside(movable_region).unwrap();
 
 
-        // Clear the scene
+        // Clear the screen
         phi.renderer.set_draw_color(Color::RGB(0, 0, 0));
         phi.renderer.clear();
 
         // Render the scene
         phi.renderer.set_draw_color(Color::RGB(200, 200, 50));
-        phi.renderer.fill_rect(self.player.rect.to_sdl().unwrap());
-
+        phi.renderer.fill_rect(self.player.rect.to_sdl()).unwrap();
 
         ViewAction::None
     }

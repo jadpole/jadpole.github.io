@@ -1,6 +1,8 @@
 use sdl2::rect::Rect as SdlRect;
 
 
+/// A simple rectangle with a position and dimensions, which can be transformed
+/// into an SDL rectangle.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Rectangle {
     pub x: f64,
@@ -11,20 +13,15 @@ pub struct Rectangle {
 
 impl Rectangle {
     /// Generates an SDL-compatible Rect equivalent to `self`.
-    /// Panics if it could not be created, for example if a
-    /// coordinate of a corner overflows an `i32`.
-    pub fn to_sdl(self) -> Option<SdlRect> {
-        // Reject negative width and height
+    /// Panics if it could not be created, e.g. if the dimensions are negative.
+    pub fn to_sdl(self) -> SdlRect {
         assert!(self.w >= 0.0 && self.h >= 0.0);
-
-        // SdlRect::new : `(i32, i32, u32, u32) -> Result<Option<SdlRect>>`
         SdlRect::new(self.x as i32, self.y as i32, self.w as u32, self.h as u32)
-            .unwrap()
     }
 
-    /// Return a (perhaps moved) rectangle which is contained by a `parent`
-    /// rectangle. If it can indeed be moved to fit, return `Some(result)`;
-    /// otherwise, return `None`.
+    /// Return a (perhaps moved) rectangle contained by a `parent` rectangle.
+    /// If it can indeed be moved to fit, then return `Some(child)`.
+    /// If the container is too small, then return `None`.
     pub fn move_inside(self, parent: Rectangle) -> Option<Rectangle> {
         // It must be smaller than the parent rectangle to fit in it.
         if self.w > parent.w || self.h > parent.h {
@@ -41,5 +38,28 @@ impl Rectangle {
                else if self.y + self.h >= parent.y + parent.h { parent.y + parent.h - self.h }
                else { self.y },
         })
+    }
+
+    /// Check whether `self` is entirely contained in, or equal to, another
+    /// rectangle passed as an argument.
+    pub fn contains(&self, rect: Rectangle) -> bool {
+        let xmin = rect.x;
+        let xmax = xmin + rect.w;
+        let ymin = rect.y;
+        let ymax = ymin + rect.h;
+
+        xmin >= self.x && xmin <= self.x + self.w &&
+        xmax >= self.x && xmax <= self.x + self.w &&
+        ymin >= self.y && ymin <= self.y + self.h &&
+        ymax >= self.y && ymax <= self.y + self.h
+    }
+
+    /// Check whether some part of `self` overlaps with another rectangle, which
+    /// is useful to detect collisions, for example.
+    pub fn overlaps(&self, other: Rectangle) -> bool {
+        self.x < other.x + other.w &&
+        self.x + self.w > other.x &&
+        self.y < other.y + other.h &&
+        self.y + self.h > other.y
     }
 }

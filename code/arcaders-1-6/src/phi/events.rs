@@ -1,22 +1,26 @@
 macro_rules! struct_events {
-    (
+    [
         keyboard: { $( $k_alias:ident : $k_sdl:ident ),* },
         else: { $( $e_alias:ident : $e_sdl:pat ),* }
-    )
+    ]
     => {
         use sdl2::EventPump;
 
 
+        /// The events that occured since the last frame and will not be recorded on the
+        /// next `Events::pump`. This allows, for instance, to check whether the user
+        /// just clicked on a link, without having to detect changes in the mouse's
+        /// state manually.
         pub struct ImmediateEvents {
-            resize: Option<(u32, u32)>,
             $( pub $k_alias : Option<bool> , )*
             $( pub $e_alias : bool ),*
         }
 
         impl ImmediateEvents {
+            /// Return the default state of ImmediateEvents, one in which no event has
+            /// yet been recorded.
             pub fn new() -> ImmediateEvents {
                 ImmediateEvents {
-                    resize: None,
                     $( $k_alias: None , )*
                     $( $e_alias: false ),*
                 }
@@ -24,16 +28,17 @@ macro_rules! struct_events {
         }
 
 
+        /// An abstraction over Rust-SDL2's EventPump that also acts as a record of the
+        /// application's events as-of the last time `Events::pump` was called.
         pub struct Events {
             pump: EventPump,
             pub now: ImmediateEvents,
 
-            // true  => pressed
-            // false => not pressed
             $( pub $k_alias: bool ),*
         }
 
         impl Events {
+            /// Create a new event record based on some SDL event pump.
             pub fn new(pump: EventPump) -> Events {
                 Events {
                     pump: pump,
@@ -44,28 +49,20 @@ macro_rules! struct_events {
                 }
             }
 
-            pub fn pump(&mut self, renderer: &mut ::sdl2::render::Renderer) {
+            /// Pump the events that happened since the last frame and update the events
+            /// record accordingly.
+            pub fn pump(&mut self) {
                 self.now = ImmediateEvents::new();
 
                 for event in self.pump.poll_iter() {
                     use sdl2::event::Event::*;
-                    use sdl2::event::WindowEventId::Resized;
                     use sdl2::keyboard::Keycode::*;
 
                     match event {
-                        Window { win_event_id: Resized, .. } => {
-                            self.now.resize = Some(renderer.output_size().unwrap());
-                        },
-
                         KeyDown { keycode, .. } => match keycode {
-                            // $( ... ),* containing $k_sdl and $k_alias means:
-                            //   "for every element ($k_alias : $k_sdl) pair,
-                            //    check whether the keycode is Some($k_sdl). If
-                            //    it is, then set the $k_alias fields to true."
                             $(
                                 Some($k_sdl) => {
                                     // Prevent multiple presses when keeping a key down
-                                    // Was previously not pressed?
                                     if !self.$k_alias {
                                         // Key pressed
                                         self.now.$k_alias = Some(true);
@@ -73,7 +70,7 @@ macro_rules! struct_events {
 
                                     self.$k_alias = true;
                                 }
-                            ),* // and add a comma after every option
+                            ),*
                             _ => {}
                         },
 
@@ -91,9 +88,8 @@ macro_rules! struct_events {
                         $(
                             $e_sdl => {
                                 self.now.$e_alias = true;
-                            }
-                        )*,
-
+                            },
+                        )*
 
                         _ => {}
                     }
