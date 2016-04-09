@@ -4,11 +4,11 @@ title: "Dealing with multiple error types in Rust"
 categories: rust
 ---
 
-If you've read [ArcadeRS](#), you know that I quite enjoy the way in which Rust
-deals with error handling &mdash; that is, through its type-system and the
-`Result` type. However, if you attempted to manage errors coming from different
-sources (and thus of different kinds), you may have found the experience kinda
-weird at first.
+If you've read [ArcadeRS](/arcaders/arcaders-1-1), you know that I quite enjoy
+the way in which Rust deals with error handling &mdash; that is, through its
+type-system and the `Result` type. However, if you attempted to manage errors
+coming from different sources (and thus of different kinds), you may have found
+the experience kinda weird at first.
 
 > NOTE: I'm using code from the next update of ArcadeRS, which uses a slightly
 > different approach from the current one. You do not need to follow the series,
@@ -236,3 +236,5 @@ call it a day_ &mdash; which, to be honest, is probably what the users of
 `Phi::new` will do anyway (indeed, that's my approach in ArcadeRS).
 
 Oh well!
+
+[Comment on Reddit!](https://www.reddit.com/r/rust/comments/4e3i8l/dealing_with_multiple_error_types_in_rust/)
