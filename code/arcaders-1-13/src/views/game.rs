@@ -165,7 +165,7 @@ impl Player {
         // Render the bounding box (for debugging purposes)
         if DEBUG {
             phi.renderer.set_draw_color(Color::RGB(200, 200, 50));
-            phi.renderer.fill_rect(self.rect.to_sdl().unwrap());
+            phi.renderer.fill_rect(self.rect.to_sdl().unwrap()).unwrap();
         }
 
         // Render the ship's current sprite.
@@ -219,7 +219,7 @@ impl Asteroid {
     fn render(&self, phi: &mut Phi) {
         if DEBUG {
             phi.renderer.set_draw_color(Color::RGB(200, 200, 50));
-            phi.renderer.fill_rect(self.rect().to_sdl().unwrap());
+            phi.renderer.fill_rect(self.rect().to_sdl().unwrap()).unwrap();
         }
 
         phi.renderer.copy_sprite(&self.sprite, self.rect);

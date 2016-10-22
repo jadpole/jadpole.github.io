@@ -164,7 +164,7 @@ impl View for ShipView {
         // Render the bounding box (for debugging purposes)
         if DEBUG {
             phi.renderer.set_draw_color(Color::RGB(200, 200, 50));
-            phi.renderer.fill_rect(self.player.rect.to_sdl().unwrap());
+            phi.renderer.fill_rect(self.player.rect.to_sdl().unwrap()).unwrap();
         }
 
         // Render the ship

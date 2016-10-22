@@ -2,7 +2,6 @@ use phi::{Phi, View, ViewAction};
 use phi::data::Rectangle;
 use phi::gfx::{AnimatedSprite, CopySprite, Sprite};
 use sdl2::pixels::Color;
-use sdl2::render::Renderer;
 use views::shared::BgSet;
 
 
@@ -259,7 +258,7 @@ impl View for ShipView {
         // Render the bounding box (for debugging purposes)
         if DEBUG {
             phi.renderer.set_draw_color(Color::RGB(200, 200, 50));
-            phi.renderer.fill_rect(self.player.rect.to_sdl().unwrap());
+            phi.renderer.fill_rect(self.player.rect.to_sdl().unwrap()).unwrap();
         }
 
         // Render the ship

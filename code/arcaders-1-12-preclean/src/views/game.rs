@@ -180,7 +180,7 @@ impl Bullet for RectBullet {
     fn render(&self, phi: &mut Phi) {
         // We will render this kind of bullet in yellow.
         phi.renderer.set_draw_color(Color::RGB(230, 230, 30));
-        phi.renderer.fill_rect(self.rect.to_sdl().unwrap());
+        phi.renderer.fill_rect(self.rect.to_sdl().unwrap()).unwrap();
     }
 
     fn rect(&self) -> Rectangle {
@@ -215,7 +215,7 @@ impl Bullet for SineBullet {
     fn render(&self, phi: &mut Phi) {
         // We will render this kind of bullet in yellow.
         phi.renderer.set_draw_color(Color::RGB(230, 230, 30));
-        phi.renderer.fill_rect(self.rect().to_sdl().unwrap());
+        phi.renderer.fill_rect(self.rect().to_sdl().unwrap()).unwrap();
     }
 
     fn rect(&self) -> Rectangle {
@@ -260,7 +260,7 @@ impl Bullet for DivergentBullet {
     fn render(&self, phi: &mut Phi) {
         // We will render this kind of bullet in yellow.
         phi.renderer.set_draw_color(Color::RGB(230, 230, 30));
-        phi.renderer.fill_rect(self.rect().to_sdl().unwrap());
+        phi.renderer.fill_rect(self.rect().to_sdl().unwrap()).unwrap();
     }
 
     fn rect(&self) -> Rectangle {
@@ -313,7 +313,7 @@ impl Asteroid {
     fn render(&self, phi: &mut Phi) {
         if DEBUG {
             phi.renderer.set_draw_color(Color::RGB(200, 200, 50));
-            phi.renderer.fill_rect(self.rect().to_sdl().unwrap());
+            phi.renderer.fill_rect(self.rect().to_sdl().unwrap()).unwrap();
         }
 
         phi.renderer.copy_sprite(&self.sprite, self.rect);
@@ -671,7 +671,7 @@ impl View for GameView {
         // Render the bounding box (for debugging purposes)
         if DEBUG {
             phi.renderer.set_draw_color(Color::RGB(200, 200, 50));
-            phi.renderer.fill_rect(self.player.rect.to_sdl().unwrap());
+            phi.renderer.fill_rect(self.player.rect.to_sdl().unwrap()).unwrap();
         }
 
         // Render the entities
