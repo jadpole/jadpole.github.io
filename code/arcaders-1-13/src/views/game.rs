@@ -239,9 +239,9 @@ impl AsteroidFactory {
     fn random(&self, phi: &mut Phi) -> Asteroid {
         let (w, h) = phi.output_size();
 
-        // FPS in [10.0, 30.0)
+        // FPS in [10.0, 30.0]
         let mut sprite = self.sprite.clone();
-        sprite.set_fps(::rand::random::<f64>().abs() * 20.0 + 10.0);
+        sprite.set_fps(::rand::random::<f64>() * 20.0 + 10.0);
 
         Asteroid {
             sprite: sprite,
@@ -252,11 +252,11 @@ impl AsteroidFactory {
                 w: ASTEROID_SIDE,
                 h: ASTEROID_SIDE,
                 x: w,
-                y: ::rand::random::<f64>().abs() * (h - ASTEROID_SIDE),
+                y: ::rand::random::<f64>() * (h - ASTEROID_SIDE),
             },
 
-            // vel in [50.0, 150.0)
-            vel: ::rand::random::<f64>().abs() * 100.0 + 50.0,
+            // vel in [50.0, 150.0]
+            vel: ::rand::random::<f64>() * 100.0 + 50.0,
         }
     }
 }
