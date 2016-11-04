@@ -18,7 +18,7 @@ impl Rectangle {
         assert!(self.w >= 0.0 && self.h >= 0.0);
 
         // SdlRect::new : `(i32, i32, u32, u32) -> Result<Option<SdlRect>>`
-        // Will panic if the width of the height is negative.
+        // Will panic if the width or the height is negative.
         SdlRect::new(self.x as i32, self.y as i32, self.w as u32, self.h as u32)
             .unwrap()
     }

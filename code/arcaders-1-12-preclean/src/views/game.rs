@@ -299,7 +299,7 @@ impl Asteroid {
         }
     }
 
-    fn update(mut self, phi: &mut Phi, dt: f64) -> Option<Asteroid> {
+    fn update(mut self, dt: f64) -> Option<Asteroid> {
         self.rect.x -= dt * self.vel;
         self.sprite.add_time(dt);
 
@@ -333,9 +333,9 @@ impl AsteroidFactory {
     fn random(&self, phi: &mut Phi) -> Asteroid {
         let (w, h) = phi.output_size();
 
-        // FPS in [10.0, 30.0)
+        // FPS in [10.0, 30.0]
         let mut sprite = self.sprite.clone();
-        sprite.set_fps(::rand::random::<f64>().abs() * 20.0 + 10.0);
+        sprite.set_fps(::rand::random::<f64>() * 20.0 + 10.0);
 
         Asteroid {
             sprite: sprite,
@@ -346,11 +346,11 @@ impl AsteroidFactory {
                 w: ASTEROID_SIDE,
                 h: ASTEROID_SIDE,
                 x: w,
-                y: ::rand::random::<f64>().abs() * (h - ASTEROID_SIDE),
+                y: ::rand::random::<f64>() * (h - ASTEROID_SIDE),
             },
 
-            // vel in [50.0, 150.0)
-            vel: ::rand::random::<f64>().abs() * 100.0 + 50.0,
+            // vel in [50.0, 150.0]
+            vel: ::rand::random::<f64>() * 100.0 + 50.0,
         }
     }
 }
@@ -579,7 +579,7 @@ impl View for GameView {
         self.asteroids =
             ::std::mem::replace(&mut self.asteroids, vec![])
             .into_iter()
-            .filter_map(|asteroid| asteroid.update(phi, elapsed))
+            .filter_map(|asteroid| asteroid.update(elapsed))
             .collect();
 
         // Update the explosions

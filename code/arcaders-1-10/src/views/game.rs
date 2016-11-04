@@ -71,19 +71,19 @@ impl Asteroid {
     fn reset(&mut self, phi: &mut Phi) {
         let (w, h) = phi.output_size();
 
-        // FPS in [10.0, 30.0)
-        self.sprite.set_fps(::rand::random::<f64>().abs() * 20.0 + 10.0);
+        // FPS in [10.0, 30.0]
+        self.sprite.set_fps(::rand::random::<f64>() * 20.0 + 10.0);
 
         // rect.y in the screen vertically
         self.rect = Rectangle {
             w: ASTEROID_SIDE,
             h: ASTEROID_SIDE,
             x: w,
-            y: ::rand::random::<f64>().abs() * (h - ASTEROID_SIDE),
+            y: ::rand::random::<f64>() * (h - ASTEROID_SIDE),
         };
 
-        // vel in [50.0, 150.0)
-        self.vel = ::rand::random::<f64>().abs() * 100.0 + 50.0;
+        // vel in [50.0, 150.0]
+        self.vel = ::rand::random::<f64>() * 100.0 + 50.0;
     }
 
     fn get_sprite(phi: &mut Phi, fps: f64) -> AnimatedSprite {
