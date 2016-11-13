@@ -2,7 +2,6 @@ use phi::{Phi, View, ViewAction};
 use phi::data::Rectangle;
 use phi::gfx::{AnimatedSprite, CopySprite, Sprite};
 use sdl2::pixels::Color;
-use sdl2::render::Renderer;
 use views::shared::BgSet;
 
 
@@ -144,19 +143,6 @@ struct RectBullet {
     rect: Rectangle,
 }
 
-impl RectBullet {
-    fn new(x: f64, y: f64) -> RectBullet {
-        RectBullet {
-            rect: Rectangle {
-                x: x,
-                y: y,
-                w: BULLET_W,
-                h: BULLET_H,
-            }
-        }
-    }
-}
-
 impl Bullet for RectBullet {
     fn update(mut self: Box<Self>, phi: &mut Phi, dt: f64) -> Option<Box<Bullet>> {
         let (w, _) = phi.output_size();
@@ -173,7 +159,7 @@ impl Bullet for RectBullet {
     fn render(&self, phi: &mut Phi) {
         // We will render this kind of bullet in yellow.
         phi.renderer.set_draw_color(Color::RGB(230, 230, 30));
-        phi.renderer.fill_rect(self.rect.to_sdl().unwrap());
+        phi.renderer.fill_rect(self.rect.to_sdl().unwrap()).unwrap();
     }
 
     fn rect(&self) -> Rectangle {
@@ -208,7 +194,7 @@ impl Bullet for SineBullet {
     fn render(&self, phi: &mut Phi) {
         // We will render this kind of bullet in yellow.
         phi.renderer.set_draw_color(Color::RGB(230, 230, 30));
-        phi.renderer.fill_rect(self.rect().to_sdl().unwrap());
+        phi.renderer.fill_rect(self.rect().to_sdl().unwrap()).unwrap();
     }
 
     fn rect(&self) -> Rectangle {
@@ -253,7 +239,7 @@ impl Bullet for DivergentBullet {
     fn render(&self, phi: &mut Phi) {
         // We will render this kind of bullet in yellow.
         phi.renderer.set_draw_color(Color::RGB(230, 230, 30));
-        phi.renderer.fill_rect(self.rect().to_sdl().unwrap());
+        phi.renderer.fill_rect(self.rect().to_sdl().unwrap()).unwrap();
     }
 
     fn rect(&self) -> Rectangle {
@@ -507,13 +493,14 @@ impl View for ShipView {
         self.asteroid.update(phi, elapsed);
 
         // TODO: Detect collisions
-        
+
         // Allow the player to shoot after the bullets are updated, so that,
         // when rendered for the first time, they are drawn wherever they
         // spawned.
         if phi.events.now.key_space == Some(true) {
-        self.bullets.append(&mut self.player.spawn_bullets());
+            self.bullets.append(&mut self.player.spawn_bullets());
         }
+
 
         // Clear the scene
         phi.renderer.set_draw_color(Color::RGB(0, 0, 0));
@@ -526,7 +513,7 @@ impl View for ShipView {
         // Render the bounding box (for debugging purposes)
         if DEBUG {
             phi.renderer.set_draw_color(Color::RGB(200, 200, 50));
-            phi.renderer.fill_rect(self.player.rect.to_sdl().unwrap());
+            phi.renderer.fill_rect(self.player.rect.to_sdl().unwrap()).unwrap();
         }
 
         // Render the ship

@@ -115,7 +115,8 @@ impl View for MainMenuView {
             h: box_h + border_width * 2.0 + margin_h * 2.0,
             x: (win_w - box_w) / 2.0 - border_width,
             y: (win_h - box_h) / 2.0 - margin_h - border_width,
-        }.to_sdl().unwrap());
+        }.to_sdl().unwrap())
+        .unwrap();
 
         // Render the colored box which holds the labels
         phi.renderer.set_draw_color(Color::RGB(140, 30, 140));
@@ -124,7 +125,8 @@ impl View for MainMenuView {
             h: box_h + margin_h * 2.0,
             x: (win_w - box_w) / 2.0,
             y: (win_h - box_h) / 2.0 - margin_h,
-        }.to_sdl().unwrap());
+        }.to_sdl().unwrap())
+        .unwrap();
 
         // Render the labels in the menu
         for (i, action) in self.actions.iter().enumerate() {

@@ -5,7 +5,7 @@ authors = ["John Doe <john.doe@example.com>"]
 
 [dependencies]
 rand = "0.3"
-sdl2 = "0.13"
-sdl2_image = "1.0.0"
-sdl2_mixer = "0.12"
-sdl2_ttf = "0.13.1"
+sdl2 = "0.24"
+sdl2_image = "0.24"
+sdl2_mixer = "0.24"
+sdl2_ttf = "0.24"
