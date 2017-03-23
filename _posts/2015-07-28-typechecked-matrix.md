@@ -39,7 +39,7 @@ macro_rules! nums {
     }
 }
 
-nums1 {
+nums! {
     N1 => 1,
     N2 => 2,
     N3 => 3,
