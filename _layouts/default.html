@@ -17,16 +17,14 @@
 
     <body>
         <header id="site-header">
-            <div class="wrapper">
-                <a id="site-title" href="{{ site.baseurl }}/">{{ site.title }}</a>
-                <nav id="site-nav">
-                    {% for page in site.pages %}
-                        {% if page.title %}
-                            <a href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
-                        {% endif %}
-                    {% endfor %}
-                </nav>
-            </div>
+            <a id="site-title" href="{{ site.baseurl }}/">{{ site.title }}</a>
+            <nav id="site-nav">
+                {% for page in site.pages %}
+                    {% if page.title %}
+                        <a href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
+                    {% endif %}
+                {% endfor %}
+            </nav>
         </header>
 
         <section id="main">
@@ -39,7 +37,7 @@
             <div class="wrapper">
                 <div id="site-info">
                     <ul class="contact-list">
-                        <li class="site-title">{{ site.title }}</li>
+                        <li class="site-title">Jessy Pelletier-Lemire</li>
                         <li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
                     </ul>
                 </div>

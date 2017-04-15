@@ -22,30 +22,31 @@ body {
  */
 
 #site-header {
-    height: 56px;
-    line-height: 56px;
-    background: #FFC107;
-    box-shadow: $shadow-1;
+    height: 54px;
+    padding: 0 24px;
+    line-height: 54px;
+    background: #009688;
+    border-bottom: 2px solid #00796B;
 }
 
 #site-title {
     margin: 0;
     font-size: 32px;
-    font-weight: 500;
+    font-weight: 400;
     letter-spacing: -1px;
     color: #fff;
-    text-shadow: 0.05rem 0.05rem 0.2rem rgba(0, 0, 0, 0.6);
+    text-shadow: 0.05rem 0.05rem 0.2rem rgba(0, 0, 0, 0.4);
 }
 
 #site-nav {
     float: right;
 
     a {
-        font-size: 18px;
-        color: $text-color-1;
+        font-size: 20px;
+        color: rgba(255, 255, 255, 0.9);
 
         &:hover {
-            color: lighten($text-color-1, 15%);
+            color: #fff;
             text-decoration: underline;
         }
 
@@ -62,12 +63,13 @@ body {
 
 #site-footer {
     padding: ($spacing-unit / 2) 0;
-    border-top: 1px dashed $text-color-4;
-    background: #FFF59D;
-    box-shadow: $shadow-1;
+    border-top: 1px solid #A5D6A7;
+    background: #C8E6C9;
 }
 
 #site-footer .wrapper {
+    text-align: center;
+
     .site-title {
         font-size: 1.2rem;
     }
@@ -82,11 +84,12 @@ body {
     #site-footer .wrapper {
         display: flex;
         flex-flow: row nowrap;
+        text-align: left;
     }
 
     #site-info { flex: 2; }
     #social-medias { flex: 1; }
-    #site-description { flex: 3; }
+    #site-description { flex: 3; text-align: right; }
 }
 
 
@@ -141,6 +144,11 @@ span[title] {
 
 span[title]:hover {
     color: #00bfa5;
+}
+
+
+.post-subtitle {
+    font-size: 22px !important;
 }
 
 
