@@ -1,13 +1,11 @@
 # Site settings
 title: "Rambling On Bytes"
 email: jessyplemire@gmail.com
-description: > # this means to ignore newlines until "baseurl:"
-  Rambling about software, philosophy and mathematics.
-baseurl: "" # the subpath of your site, e.g. /blog/
-url: "http://jadpole.github.io" # the base hostname & protocol for your site
-# witter_username: jekyllrb
+description: Rambling about software and philosophy.
+baseurl: ""
+url: "http://jadpole.github.io"
 github_username:  jadpole
-twitter_username: jadpole
+# twitter_username: jadpole  # Never use it, so no use linking to it
 
 gems:
   - jekyll-redirect-from
