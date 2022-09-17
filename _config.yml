@@ -7,8 +7,8 @@ url: "http://jadpole.github.io"
 github_username:  jadpole
 # twitter_username: jadpole  # Never use it, so no use linking to it
 
-gems:
-  - jekyll-redirect-from
+# gems:
+#   - jekyll-redirect-from
 
 # Build settings
 kramdown:
